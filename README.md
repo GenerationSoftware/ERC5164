@@ -4,6 +4,8 @@ EIP-5164 specifies how smart contracts on one chain can message contracts on ano
 
 The EIP is currently in the Review stage: https://eips.ethereum.org/EIPS/eip-5164
 
+This repository includes 5164 wrappers for popular L2s. It has been [audited by Code Arena](https://gov.pooltogether.com/t/c4-audit-erc-5164/2708).  Here are the [findings](https://github.com/code-423n4/2022-12-pooltogether-findings).
+
 Feedback and PR are welcome!
 
 ## How to use

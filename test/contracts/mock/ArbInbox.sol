@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // Source: https://github.com/OffchainLabs/nitro/blob/691f00a06ff301304c464d9fb379da0fcd82bedc/contracts/src/mocks/InboxStub.sol
 
-pragma solidity 0.8.16;
+pragma solidity ^0.8.16;
 
 import "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 import "@arbitrum/nitro-contracts/src/bridge/IBridge.sol";
