@@ -2,14 +2,13 @@
 
 pragma solidity ^0.8.16;
 
-import "forge-std/Test.sol";
+import { Test } from "forge-std/Test.sol";
 
 import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 
 import { MessageDispatcherArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
 import { MessageExecutorArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
-import { IMessageDispatcher } from "../../../src/interfaces/IMessageDispatcher.sol";
-import "../../../src/libraries/MessageLib.sol";
+import { MessageLib } from "../../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../../contracts/Greeter.sol";
 import { ArbInbox } from "../../contracts/mock/ArbInbox.sol";

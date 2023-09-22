@@ -2,18 +2,16 @@
 
 pragma solidity ^0.8.16;
 
-import "forge-std/Test.sol";
+import { Test } from "forge-std/Test.sol";
 
-import { ICrossDomainMessenger } from "@eth-optimism/contracts/libraries/bridge/ICrossDomainMessenger.sol";
-import { L2CrossDomainMessenger } from "@eth-optimism/contracts/L2/messaging/L2CrossDomainMessenger.sol";
-import { AddressAliasHelper } from "@eth-optimism/contracts/standards/AddressAliasHelper.sol";
+import { ICrossDomainMessenger } from "../../src/vendor/optimism/ICrossDomainMessenger.sol";
+import { AddressAliasHelper } from "../../src/libraries/AddressAliasHelper.sol";
 
-import { IMessageDispatcher } from "../../src/interfaces/IMessageDispatcher.sol";
 import { IMessageExecutor } from "../../src/interfaces/IMessageExecutor.sol";
 
-import "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
-import "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
-import "../../src/libraries/MessageLib.sol";
+import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
+import { MessageExecutorOptimism } from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
+import { MessageLib } from "../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../contracts/Greeter.sol";
 
@@ -34,6 +32,7 @@ contract EthereumToOptimismForkTest is Test {
   uint256 public nonce = 1;
   uint256 public toChainId = 10;
   uint256 public fromChainId = 1;
+  uint256 public minGasLimit = 250_000;
 
   /* ============ Events to test ============ */
   event MessageDispatched(
@@ -256,7 +255,7 @@ contract EthereumToOptimismForkTest is Test {
 
     assertEq(greeter.greet(), l2Greeting);
 
-    L2CrossDomainMessenger l2Bridge = L2CrossDomainMessenger(l2CrossDomainMessenger);
+    ICrossDomainMessenger l2Bridge = ICrossDomainMessenger(l2CrossDomainMessenger);
 
     vm.startPrank(AddressAliasHelper.applyL1ToL2Alias(proxyOVML1CrossDomainMessenger));
 
@@ -272,13 +271,15 @@ contract EthereumToOptimismForkTest is Test {
     emit MessageIdExecuted(fromChainId, _expectedMessageId);
 
     l2Bridge.relayMessage(
-      address(executor),
+      l2Bridge.messageNonce() + 1,
       address(dispatcher),
+      address(executor),
+      0,
+      minGasLimit,
       abi.encodeCall(
         IMessageExecutor.executeMessage,
         (_to, _data, _expectedMessageId, fromChainId, address(this))
-      ),
-      l2Bridge.messageNonce() + 1
+      )
     );
 
     assertEq(greeter.greet(), l1Greeting);
@@ -315,7 +316,7 @@ contract EthereumToOptimismForkTest is Test {
       data: abi.encodeCall(Greeter.setGreeting, (l1Greeting))
     });
 
-    L2CrossDomainMessenger l2Bridge = L2CrossDomainMessenger(l2CrossDomainMessenger);
+    ICrossDomainMessenger l2Bridge = ICrossDomainMessenger(l2CrossDomainMessenger);
 
     vm.startPrank(AddressAliasHelper.applyL1ToL2Alias(proxyOVML1CrossDomainMessenger));
 
@@ -328,13 +329,15 @@ contract EthereumToOptimismForkTest is Test {
     emit MessageIdExecuted(fromChainId, _expectedMessageId);
 
     l2Bridge.relayMessage(
-      address(executor),
+      l2Bridge.messageNonce() + 1,
       address(dispatcher),
+      address(executor),
+      0,
+      minGasLimit,
       abi.encodeCall(
         IMessageExecutor.executeMessageBatch,
         (_messages, _expectedMessageId, fromChainId, address(this))
-      ),
-      l2Bridge.messageNonce() + 1
+      )
     );
 
     assertEq(greeter.greet(), l1Greeting);

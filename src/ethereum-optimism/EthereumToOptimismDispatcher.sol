@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.16;
 
-import { ICrossDomainMessenger } from "@eth-optimism/contracts/libraries/bridge/ICrossDomainMessenger.sol";
+import { ICrossDomainMessenger } from "../vendor/optimism/ICrossDomainMessenger.sol";
 
 import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
 import { IMessageDispatcher, ISingleMessageDispatcher } from "../interfaces/ISingleMessageDispatcher.sol";
 import { IBatchedMessageDispatcher } from "../interfaces/IBatchedMessageDispatcher.sol";
 
-import "../libraries/MessageLib.sol";
+import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
  * @title MessageDispatcherOptimism contract
@@ -73,10 +73,10 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
   }
 
   /// @inheritdoc IBatchedMessageDispatcher
-  function dispatchMessageBatch(uint256 _toChainId, MessageLib.Message[] calldata _messages)
-    external
-    returns (bytes32)
-  {
+  function dispatchMessageBatch(
+    uint256 _toChainId,
+    MessageLib.Message[] calldata _messages
+  ) external returns (bytes32) {
     address _executorAddress = _getMessageExecutorAddress(_toChainId);
     _checkExecutor(_executorAddress);
 

@@ -2,9 +2,7 @@
 
 pragma solidity ^0.8.16;
 
-import "./IMessageDispatcher.sol";
-
-import "../libraries/MessageLib.sol";
+import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
  * @title MessageExecutor interface

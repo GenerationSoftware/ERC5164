@@ -2,10 +2,11 @@
 
 pragma solidity ^0.8.16;
 
-import { ICrossDomainMessenger } from "@eth-optimism/contracts/libraries/bridge/ICrossDomainMessenger.sol";
+import { ICrossDomainMessenger } from "../vendor/optimism/ICrossDomainMessenger.sol";
 
-import "../interfaces/IMessageExecutor.sol";
-import "../libraries/MessageLib.sol";
+import { IMessageDispatcher } from "../interfaces/IMessageDispatcher.sol";
+import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
+import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
  * @title MessageExecutorOptimism contract

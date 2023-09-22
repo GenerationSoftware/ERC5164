@@ -1,6 +1,9 @@
 import { task } from 'hardhat/config';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { L1TransactionReceipt, L1ToL2MessageGasEstimator } from '@arbitrum/sdk/';
+import {
+  L1TransactionReceipt,
+  L1ToL2MessageGasEstimator,
+} from '@arbitrum/sdk/';
 import { getBaseFee } from '@arbitrum/sdk/dist/lib/utils/lib';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { BigNumber, providers } from 'ethers';
@@ -11,7 +14,11 @@ import { ARBITRUM_CHAIN_ID, MAINNET_CHAIN_ID } from '../../../Constants';
 import { getContractAddress } from '../../../helpers/getContract';
 import { getChainName } from '../../../helpers/getChain';
 import { action, error as errorLog, info, success } from '../../../helpers/log';
-import { MessageDispatcherArbitrum, MessageExecutorArbitrum, Greeter } from '../../../types';
+import {
+  MessageDispatcherArbitrum,
+  MessageExecutorArbitrum,
+  Greeter,
+} from '../../../types';
 import GreeterArtifact from '../../../out/Greeter.sol/Greeter.json';
 
 const killHardhatNode = async (port: number, chainId: number) => {
@@ -40,7 +47,9 @@ export const dispatchMessageBatch = task(
 
   const { deployer } = await getNamedAccounts();
 
-  const l2Provider = new providers.JsonRpcProvider(process.env.ARBITRUM_RPC_URL);
+  const l2Provider = new providers.JsonRpcProvider(
+    process.env.ARBITRUM_RPC_URL,
+  );
 
   info(`Dispatcher is: ${deployer}`);
 
@@ -56,10 +65,9 @@ export const dispatchMessageBatch = task(
   const greeterAddress = await getContractAddress('Greeter', ARBITRUM_CHAIN_ID);
 
   const greeting = 'Hello from L1';
-  const messageData = new Interface(['function setGreeting(string)']).encodeFunctionData(
-    'setGreeting',
-    [greeting],
-  );
+  const messageData = new Interface([
+    'function setGreeting(string)',
+  ]).encodeFunctionData('setGreeting', [greeting]);
 
   const messages = [
     {
@@ -86,27 +94,32 @@ export const dispatchMessageBatch = task(
    * (2) gasLimit: The L2 gas limit
    * (3) deposit: The total amount to deposit on L1 to cover L2 gas and L2 message value
    */
-  const { deposit, gasLimit, maxSubmissionCost } = await l1ToL2MessageGasEstimate.estimateAll(
-    {
-      to: messageExecutorAddress,
-      from: messageDispatcherArbitrum.address,
-      data: executeMessageBatchData,
-      l2CallValue: BigNumber.from(0),
-      excessFeeRefundAddress: deployer,
-      callValueRefundAddress: deployer,
-    },
-    baseFee,
-    l1Provider,
+  const { deposit, gasLimit, maxSubmissionCost } =
+    await l1ToL2MessageGasEstimate.estimateAll(
+      {
+        to: messageExecutorAddress,
+        from: messageDispatcherArbitrum.address,
+        data: executeMessageBatchData,
+        l2CallValue: BigNumber.from(0),
+        excessFeeRefundAddress: deployer,
+        callValueRefundAddress: deployer,
+      },
+      baseFee,
+      l1Provider,
+    );
+
+  info(
+    `Current retryable base submission price is: ${maxSubmissionCost.toString()}`,
   );
 
-  info(`Current retryable base submission price is: ${maxSubmissionCost.toString()}`);
-
-  const dispatchMessageBatchTransaction = await messageDispatcherArbitrum.dispatchMessageBatch(
-    ARBITRUM_CHAIN_ID,
-    messages,
-  );
+  const dispatchMessageBatchTransaction =
+    await messageDispatcherArbitrum.dispatchMessageBatch(
+      ARBITRUM_CHAIN_ID,
+      messages,
+    );
   console.log('before dispatchMessageBatchTransactionReceipt');
-  const dispatchMessageBatchTransactionReceipt = await dispatchMessageBatchTransaction.wait();
+  const dispatchMessageBatchTransactionReceipt =
+    await dispatchMessageBatchTransaction.wait();
 
   const dispatchedMessagesEventInterface = new Interface([
     'event MessageBatchDispatched(bytes32 indexed messageId, address indexed from, uint256 indexed toChainId, (address to,bytes data)[])',
@@ -127,22 +140,26 @@ export const dispatchMessageBatch = task(
 
   info(`L2 gas price: ${gasPriceBid.toString()}`);
 
-  info(`Sending greeting to L2 with ${deposit.toString()} messageValue for L2 fees:`);
-
-  const processMessageBatchTransaction = await messageDispatcherArbitrum.processMessageBatch(
-    messageId,
-    messages,
-    deployer,
-    deployer,
-    gasLimit,
-    maxSubmissionCost,
-    gasPriceBid,
-    {
-      value: deposit,
-    },
+  info(
+    `Sending greeting to L2 with ${deposit.toString()} messageValue for L2 fees:`,
   );
 
-  const processMessageBatchTransactionReceipt = await processMessageBatchTransaction.wait();
+  const processMessageBatchTransaction =
+    await messageDispatcherArbitrum.processMessageBatch(
+      messageId,
+      messages,
+      deployer,
+      deployer,
+      gasLimit,
+      maxSubmissionCost,
+      gasPriceBid,
+      {
+        value: deposit,
+      },
+    );
+
+  const processMessageBatchTransactionReceipt =
+    await processMessageBatchTransaction.wait();
 
   const processedMessagesEventInterface = new Interface([
     'event MessageBatchProcessed(bytes32 indexed messageId, address indexed sender, uint256 indexed ticketId)',
@@ -152,9 +169,12 @@ export const dispatchMessageBatch = task(
     processMessageBatchTransactionReceipt.logs[2],
   );
 
-  const [processedMessageId, sender, ticketId] = processedMessagesEventLogs.args;
+  const [processedMessageId, sender, ticketId] =
+    processedMessagesEventLogs.args;
 
-  const receipt = await l1Provider.getTransactionReceipt(processMessageBatchTransaction.hash);
+  const receipt = await l1Provider.getTransactionReceipt(
+    processMessageBatchTransaction.hash,
+  );
   const l1Receipt = new L1TransactionReceipt(receipt);
 
   const { retryableCreationId }: { retryableCreationId: string } = (
@@ -196,13 +216,15 @@ export const executeMessageBatch = task(
 
   const greeterAddress = await getContractAddress('Greeter', ARBITRUM_CHAIN_ID);
 
-  const greeter = (await getContractAt(GreeterArtifact.abi, greeterAddress)) as Greeter;
+  const greeter = (await getContractAt(
+    GreeterArtifact.abi,
+    greeterAddress,
+  )) as Greeter;
 
   const greeting = 'Hello from L1';
-  const messageData = new Interface(['function setGreeting(string)']).encodeFunctionData(
-    'setGreeting',
-    [greeting],
-  );
+  const messageData = new Interface([
+    'function setGreeting(string)',
+  ]).encodeFunctionData('setGreeting', [greeting]);
 
   const messages = [
     {
@@ -222,7 +244,12 @@ export const executeMessageBatch = task(
     async (signer: SignerWithAddress) =>
       await messageExecutorArbitrum
         .connect(signer)
-        .executeMessageBatch(messages, formatBytes32String(''), MAINNET_CHAIN_ID, deployer),
+        .executeMessageBatch(
+          messages,
+          formatBytes32String(''),
+          MAINNET_CHAIN_ID,
+          deployer,
+        ),
     hre,
   );
 

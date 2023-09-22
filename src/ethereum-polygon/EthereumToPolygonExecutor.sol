@@ -4,7 +4,7 @@ pragma solidity ^0.8.16;
 
 import { FxBaseChildTunnel } from "@maticnetwork/fx-portal/contracts/tunnel/FxBaseChildTunnel.sol";
 
-import "../libraries/MessageLib.sol";
+import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
  * @title MessageExecutorPolygon contract
@@ -42,7 +42,7 @@ contract MessageExecutorPolygon is FxBaseChildTunnel {
 
   /// @inheritdoc FxBaseChildTunnel
   function _processMessageFromRoot(
-    uint256, /* _stateId */
+    uint256 /* _stateId */,
     address _sender,
     bytes memory _data
   ) internal override validateSender(_sender) {

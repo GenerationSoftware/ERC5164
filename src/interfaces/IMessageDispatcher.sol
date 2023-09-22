@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.16;
 
-import "../libraries/MessageLib.sol";
+import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
  * @title ERC-5164: Cross-Chain Execution Standard

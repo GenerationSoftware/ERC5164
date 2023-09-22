@@ -4,11 +4,12 @@ pragma solidity ^0.8.16;
 
 import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 
+import { IMessageDispatcher } from "../interfaces/IMessageDispatcher.sol";
 import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
-import { IMessageDispatcher, ISingleMessageDispatcher } from "../interfaces/ISingleMessageDispatcher.sol";
+import { ISingleMessageDispatcher } from "../interfaces/ISingleMessageDispatcher.sol";
 import { IBatchedMessageDispatcher } from "../interfaces/IBatchedMessageDispatcher.sol";
 
-import "../libraries/MessageLib.sol";
+import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
  * @title MessageDispatcherArbitrum contract
@@ -101,10 +102,10 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
   }
 
   /// @inheritdoc IBatchedMessageDispatcher
-  function dispatchMessageBatch(uint256 _toChainId, MessageLib.Message[] calldata _messages)
-    external
-    returns (bytes32)
-  {
+  function dispatchMessageBatch(
+    uint256 _toChainId,
+    MessageLib.Message[] calldata _messages
+  ) external returns (bytes32) {
     _checkToChainId(_toChainId);
 
     uint256 _nonce = _incrementNonce();

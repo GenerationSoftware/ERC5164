@@ -60,9 +60,17 @@ export default task('fork:distribute', 'Distribute Ether and USDC').setAction(
     if (chainId) {
       action(`Distributing Ether and USDC on ${getChainName(chainId)}...`);
 
-      const ethHolder = provider.getUncheckedSigner(getETHHolderAddress(chainId));
-      const usdcHolder = provider.getUncheckedSigner(getUSDCHolderAddress(chainId));
-      const usdcContract = await getContractAt(ERC20, getUSDCContractAddress(chainId), usdcHolder);
+      const ethHolder = provider.getUncheckedSigner(
+        getETHHolderAddress(chainId),
+      );
+      const usdcHolder = provider.getUncheckedSigner(
+        getUSDCHolderAddress(chainId),
+      );
+      const usdcContract = await getContractAt(
+        ERC20,
+        getUSDCContractAddress(chainId),
+        usdcHolder,
+      );
 
       const recipients: { [key: string]: string } = {
         ['Deployer']: deployer.address,
@@ -82,7 +90,10 @@ export default task('fork:distribute', 'Distribute Ether and USDC').setAction(
         });
 
         action(`Sending 1000 USDC to ${name}...`);
-        await usdcContract.transfer(address, ethers.utils.parseUnits('1000', USDC_TOKEN_DECIMALS));
+        await usdcContract.transfer(
+          address,
+          ethers.utils.parseUnits('1000', USDC_TOKEN_DECIMALS),
+        );
       }
 
       success('Done!');

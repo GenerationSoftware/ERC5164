@@ -1,4 +1,7 @@
-import { L1TransactionReceipt, L1ToL2MessageGasEstimator } from '@arbitrum/sdk/';
+import {
+  L1TransactionReceipt,
+  L1ToL2MessageGasEstimator,
+} from '@arbitrum/sdk/';
 import { getBaseFee } from '@arbitrum/sdk/dist/lib/utils/lib';
 import { BigNumber, providers } from 'ethers';
 import hre from 'hardhat';
@@ -23,7 +26,9 @@ const main = async () => {
 
   const { deployer } = await getNamedAccounts();
 
-  const l2Provider = new providers.JsonRpcProvider(process.env.ARBITRUM_GOERLI_RPC_URL);
+  const l2Provider = new providers.JsonRpcProvider(
+    process.env.ARBITRUM_GOERLI_RPC_URL,
+  );
 
   info(`Dispatcher is: ${deployer}`);
 
@@ -44,20 +49,25 @@ const main = async () => {
     'Forge',
   );
 
-  const greeterAddress = await getContractAddress('Greeter', ARBITRUM_GOERLI_CHAIN_ID, 'Forge');
+  const greeterAddress = await getContractAddress(
+    'Greeter',
+    ARBITRUM_GOERLI_CHAIN_ID,
+    'Forge',
+  );
 
   const greeting = 'Hello from L1';
-  const messageData = new Interface(['function setGreeting(string)']).encodeFunctionData(
-    'setGreeting',
-    [greeting],
-  );
+  const messageData = new Interface([
+    'function setGreeting(string)',
+  ]).encodeFunctionData('setGreeting', [greeting]);
 
-  const dispatchMessageTransaction = await messageDispatcherArbitrum.dispatchMessage(
-    ARBITRUM_GOERLI_CHAIN_ID,
-    greeterAddress,
-    messageData,
-  );
-  const dispatchMessageTransactionReceipt = await dispatchMessageTransaction.wait();
+  const dispatchMessageTransaction =
+    await messageDispatcherArbitrum.dispatchMessage(
+      ARBITRUM_GOERLI_CHAIN_ID,
+      greeterAddress,
+      messageData,
+    );
+  const dispatchMessageTransactionReceipt =
+    await dispatchMessageTransaction.wait();
 
   const dispatchedMessagesEventInterface = new Interface([
     'event MessageDispatched(bytes32 indexed messageId, address indexed from, uint256 indexed toChainId, address to, bytes data)',
@@ -91,20 +101,23 @@ const main = async () => {
    * (2) gasLimit: The L2 gas limit
    * (3) deposit: The total amount to deposit on L1 to cover L2 gas and L2 message value
    */
-  const { deposit, gasLimit, maxSubmissionCost } = await l1ToL2MessageGasEstimate.estimateAll(
-    {
-      from: messageDispatcherArbitrumAddress,
-      to: messageExecutorAddress,
-      l2CallValue: BigNumber.from(0),
-      excessFeeRefundAddress: deployer,
-      callValueRefundAddress: deployer,
-      data: executeMessageData,
-    },
-    baseFee,
-    l1Provider,
-  );
+  const { deposit, gasLimit, maxSubmissionCost } =
+    await l1ToL2MessageGasEstimate.estimateAll(
+      {
+        from: messageDispatcherArbitrumAddress,
+        to: messageExecutorAddress,
+        l2CallValue: BigNumber.from(0),
+        excessFeeRefundAddress: deployer,
+        callValueRefundAddress: deployer,
+        data: executeMessageData,
+      },
+      baseFee,
+      l1Provider,
+    );
 
-  info(`Current retryable base submission price is: ${maxSubmissionCost.toString()}`);
+  info(
+    `Current retryable base submission price is: ${maxSubmissionCost.toString()}`,
+  );
 
   action('Process message from Ethereum to Arbitrum...');
 
@@ -112,23 +125,27 @@ const main = async () => {
 
   info(`L2 gas price: ${gasPriceBid.toString()}`);
 
-  info(`Sending greeting to L2 with ${deposit.toString()} messageValue for L2 fees:`);
-
-  const processMessageTransaction = await messageDispatcherArbitrum.processMessage(
-    messageId,
-    deployer,
-    greeterAddress,
-    messageData,
-    deployer,
-    gasLimit,
-    maxSubmissionCost,
-    gasPriceBid,
-    {
-      value: deposit,
-    },
+  info(
+    `Sending greeting to L2 with ${deposit.toString()} messageValue for L2 fees:`,
   );
 
-  const processMessageTransactionReceipt = await processMessageTransaction.wait();
+  const processMessageTransaction =
+    await messageDispatcherArbitrum.processMessage(
+      messageId,
+      deployer,
+      greeterAddress,
+      messageData,
+      deployer,
+      gasLimit,
+      maxSubmissionCost,
+      gasPriceBid,
+      {
+        value: deposit,
+      },
+    );
+
+  const processMessageTransactionReceipt =
+    await processMessageTransaction.wait();
 
   const messageProcessedEventInterface = new Interface([
     'event MessageProcessed(bytes32 indexed messageId, address indexed sender, uint256 indexed ticketId)',
@@ -140,7 +157,9 @@ const main = async () => {
 
   const [processedMessageId, sender, ticketId] = messageProcessedEventLogs.args;
 
-  const receipt = await l1Provider.getTransactionReceipt(processMessageTransaction.hash);
+  const receipt = await l1Provider.getTransactionReceipt(
+    processMessageTransaction.hash,
+  );
   const l1Receipt = new L1TransactionReceipt(receipt);
 
   const { retryableCreationId }: { retryableCreationId: string } = (
