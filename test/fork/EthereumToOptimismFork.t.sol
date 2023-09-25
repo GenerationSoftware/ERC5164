@@ -32,7 +32,8 @@ contract EthereumToOptimismForkTest is Test {
   uint256 public nonce = 1;
   uint256 public toChainId = 10;
   uint256 public fromChainId = 1;
-  uint256 public minGasLimit = 250_000;
+  uint32 public freeGasLimit = 1_920_000;
+  uint32 public customGasLimit = 250_000;
 
   /* ============ Events to test ============ */
   event MessageDispatched(
@@ -190,6 +191,31 @@ contract EthereumToOptimismForkTest is Test {
     dispatcher.dispatchMessage(toChainId, _to, _data);
   }
 
+  /* ============ dispatchAndProcessMessage ============ */
+  function testDispatchAndProcessMessage() public {
+    deployAll();
+    setAll();
+
+    vm.selectFork(mainnetFork);
+
+    address _to = address(greeter);
+    bytes memory _data = abi.encodeCall(Greeter.setGreeting, (l1Greeting));
+
+    bytes32 _expectedMessageId = MessageLib.computeMessageId(nonce, address(this), _to, _data);
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageDispatched(_expectedMessageId, address(this), toChainId, _to, _data);
+
+    bytes32 _messageId = dispatcher.dispatchAndProcessMessage(
+      toChainId,
+      _to,
+      _data,
+      customGasLimit
+    );
+
+    assertEq(_messageId, _expectedMessageId);
+  }
+
   /* ============ dispatchMessageBatch ============ */
   function testDispatchMessageBatch() public {
     deployAll();
@@ -245,6 +271,33 @@ contract EthereumToOptimismForkTest is Test {
     dispatcher.dispatchMessageBatch(toChainId, _messages);
   }
 
+  /* ============ dispatchAndProcessMessageBatch ============ */
+  function testDispatchAndProcessMessageBatch() public {
+    deployAll();
+    setAll();
+
+    vm.selectFork(mainnetFork);
+
+    MessageLib.Message[] memory _messages = new MessageLib.Message[](1);
+    _messages[0] = MessageLib.Message({
+      to: address(greeter),
+      data: abi.encodeCall(Greeter.setGreeting, (l1Greeting))
+    });
+
+    bytes32 _expectedMessageId = MessageLib.computeMessageBatchId(nonce, address(this), _messages);
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageBatchDispatched(_expectedMessageId, address(this), toChainId, _messages);
+
+    bytes32 _messageId = dispatcher.dispatchAndProcessMessageBatch(
+      toChainId,
+      _messages,
+      customGasLimit
+    );
+
+    assertEq(_messageId, _expectedMessageId);
+  }
+
   /* ============ executeMessage ============ */
 
   function testExecuteMessage() public {
@@ -275,7 +328,7 @@ contract EthereumToOptimismForkTest is Test {
       address(dispatcher),
       address(executor),
       0,
-      minGasLimit,
+      freeGasLimit,
       abi.encodeCall(
         IMessageExecutor.executeMessage,
         (_to, _data, _expectedMessageId, fromChainId, address(this))
@@ -333,7 +386,7 @@ contract EthereumToOptimismForkTest is Test {
       address(dispatcher),
       address(executor),
       0,
-      minGasLimit,
+      freeGasLimit,
       abi.encodeCall(
         IMessageExecutor.executeMessageBatch,
         (_messages, _expectedMessageId, fromChainId, address(this))

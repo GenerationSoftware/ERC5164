@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "forge clean",
     "compile": "forge build",
-    "coverage": "forge coverage --report lcov && lcov --remove lcov.info -o lcov.info 'test/contracts/mock/*' 'test/fork' 'test/unit' 'script/*' && genhtml lcov.info -o coverage",
+    "coverage": "forge coverage --report lcov && lcov --remove lcov.info -o lcov.info 'src/libraries/AddressAliasHelper.sol' 'test/contracts/mock/*' 'script/*' && genhtml lcov.info -o coverage",
     "format": "prettier --config .prettierrc --write \"**/*.{ts,js,json,md,sol,yml}\"",
     "format:file": "prettier --config .prettierrc --write",
     "hint": "solhint --config \"./.solhint.json\" \"{src,test}/**/*.sol\"",
