@@ -68,7 +68,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
    * @param _gasLimit Gas limit at which the message will be executed on Optimism
    * @return bytes32 ID uniquely identifying the message
    */
-  function dispatchAndProcessMessage(
+  function dispatchMessageWithGasLimit(
     uint256 _toChainId,
     address _to,
     bytes calldata _data,
@@ -94,7 +94,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
    * @param _gasLimit Gas limit at which the message will be executed on Optimism
    * @return bytes32 ID uniquely identifying the `messages`
    */
-  function dispatchAndProcessMessageBatch(
+  function dispatchMessageWithGasLimitBatch(
     uint256 _toChainId,
     MessageLib.Message[] calldata _messages,
     uint32 _gasLimit

@@ -191,8 +191,8 @@ contract EthereumToOptimismForkTest is Test {
     dispatcher.dispatchMessage(toChainId, _to, _data);
   }
 
-  /* ============ dispatchAndProcessMessage ============ */
-  function testDispatchAndProcessMessage() public {
+  /* ============ dispatchMessageWithGasLimit ============ */
+  function testdispatchMessageWithGasLimit() public {
     deployAll();
     setAll();
 
@@ -206,7 +206,7 @@ contract EthereumToOptimismForkTest is Test {
     vm.expectEmit(true, true, true, true, address(dispatcher));
     emit MessageDispatched(_expectedMessageId, address(this), toChainId, _to, _data);
 
-    bytes32 _messageId = dispatcher.dispatchAndProcessMessage(
+    bytes32 _messageId = dispatcher.dispatchMessageWithGasLimit(
       toChainId,
       _to,
       _data,
@@ -271,8 +271,8 @@ contract EthereumToOptimismForkTest is Test {
     dispatcher.dispatchMessageBatch(toChainId, _messages);
   }
 
-  /* ============ dispatchAndProcessMessageBatch ============ */
-  function testDispatchAndProcessMessageBatch() public {
+  /* ============ dispatchMessageWithGasLimitBatch ============ */
+  function testdispatchMessageWithGasLimitBatch() public {
     deployAll();
     setAll();
 
@@ -289,7 +289,7 @@ contract EthereumToOptimismForkTest is Test {
     vm.expectEmit(true, true, true, true, address(dispatcher));
     emit MessageBatchDispatched(_expectedMessageId, address(this), toChainId, _messages);
 
-    bytes32 _messageId = dispatcher.dispatchAndProcessMessageBatch(
+    bytes32 _messageId = dispatcher.dispatchMessageWithGasLimitBatch(
       toChainId,
       _messages,
       customGasLimit
