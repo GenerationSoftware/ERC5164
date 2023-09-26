@@ -29,8 +29,8 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
   /// @notice ID of the chain receiving the dispatched messages. i.e.: 10 for Mainnet, 420 for Goerli.
   uint256 internal immutable toChainId;
 
-  /// @notice Free gas limit on Optimism
-  uint32 internal constant GAS_LIMIT = uint32(1920000);
+  /// @notice Gas limit at which the transaction is executed on L2 when calling `dispatchMessage`.
+  uint32 internal immutable gasLimit;
 
   /* ============ Constructor ============ */
 
@@ -38,13 +38,15 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
    * @notice MessageDispatcherOptimism constructor.
    * @param _crossDomainMessenger Address of the Optimism cross domain messenger
    * @param _toChainId ID of the chain receiving the dispatched messages
+   * @param _gasLimit Gas limit at which the transaction is executed on L2 when calling `dispatchMessage`
    */
-  constructor(ICrossDomainMessenger _crossDomainMessenger, uint256 _toChainId) {
+  constructor(ICrossDomainMessenger _crossDomainMessenger, uint256 _toChainId, uint32 _gasLimit) {
     require(address(_crossDomainMessenger) != address(0), "Dispatcher/CDM-not-zero-address");
     require(_toChainId != 0, "Dispatcher/chainId-not-zero");
 
     crossDomainMessenger = _crossDomainMessenger;
     toChainId = _toChainId;
+    gasLimit = _gasLimit;
   }
 
   /* ============ External Functions ============ */
@@ -55,7 +57,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
     address _to,
     bytes calldata _data
   ) external returns (bytes32) {
-    return _dispatchMessage(_toChainId, _to, _data, GAS_LIMIT);
+    return _dispatchMessage(_toChainId, _to, _data, gasLimit);
   }
 
   /**
@@ -82,7 +84,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
     uint256 _toChainId,
     MessageLib.Message[] calldata _messages
   ) external returns (bytes32) {
-    return _dispatchMessageBatch(_toChainId, _messages, GAS_LIMIT);
+    return _dispatchMessageBatch(_toChainId, _messages, gasLimit);
   }
 
   /**

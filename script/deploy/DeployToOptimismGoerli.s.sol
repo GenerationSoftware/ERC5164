@@ -17,7 +17,11 @@ contract DeployMessageDispatcherToGoerli is Script {
   function run() public {
     vm.broadcast();
 
-    new MessageDispatcherOptimism(ICrossDomainMessenger(proxyOVML1CrossDomainMessenger), 420);
+    new MessageDispatcherOptimism(
+      ICrossDomainMessenger(proxyOVML1CrossDomainMessenger),
+      420,
+      1_920_000
+    );
 
     vm.stopBroadcast();
   }

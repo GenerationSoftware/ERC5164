@@ -32,7 +32,7 @@ contract EthereumToOptimismForkTest is Test {
   uint256 public nonce = 1;
   uint256 public toChainId = 10;
   uint256 public fromChainId = 1;
-  uint32 public freeGasLimit = 1_920_000;
+  uint32 public defaultGasLimit = 1_920_000;
   uint32 public customGasLimit = 250_000;
 
   /* ============ Events to test ============ */
@@ -73,7 +73,8 @@ contract EthereumToOptimismForkTest is Test {
 
     dispatcher = new MessageDispatcherOptimism(
       ICrossDomainMessenger(proxyOVML1CrossDomainMessenger),
-      toChainId
+      toChainId,
+      defaultGasLimit
     );
 
     vm.makePersistent(address(dispatcher));
@@ -328,7 +329,7 @@ contract EthereumToOptimismForkTest is Test {
       address(dispatcher),
       address(executor),
       0,
-      freeGasLimit,
+      defaultGasLimit,
       abi.encodeCall(
         IMessageExecutor.executeMessage,
         (_to, _data, _expectedMessageId, fromChainId, address(this))
@@ -386,7 +387,7 @@ contract EthereumToOptimismForkTest is Test {
       address(dispatcher),
       address(executor),
       0,
-      freeGasLimit,
+      defaultGasLimit,
       abi.encodeCall(
         IMessageExecutor.executeMessageBatch,
         (_messages, _expectedMessageId, fromChainId, address(this))

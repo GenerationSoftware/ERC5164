@@ -16,7 +16,11 @@ contract DeployMessageDispatcherToEthereumMainnet is Script {
   function run() public {
     vm.broadcast();
 
-    new MessageDispatcherOptimism(ICrossDomainMessenger(proxyOVML1CrossDomainMessenger), 10);
+    new MessageDispatcherOptimism(
+      ICrossDomainMessenger(proxyOVML1CrossDomainMessenger),
+      10,
+      1_920_000
+    );
 
     vm.stopBroadcast();
   }
