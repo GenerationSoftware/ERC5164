@@ -4,11 +4,10 @@ pragma solidity ^0.8.16;
 
 import { FxBaseRootTunnel } from "@maticnetwork/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol";
 
-import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
 import { IMessageDispatcher, ISingleMessageDispatcher } from "../interfaces/ISingleMessageDispatcher.sol";
 import { IBatchedMessageDispatcher } from "../interfaces/IBatchedMessageDispatcher.sol";
 
-import "../libraries/MessageLib.sol";
+import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
  * @title MessageDispatcherPolygon contract
@@ -69,10 +68,10 @@ contract MessageDispatcherPolygon is
   }
 
   /// @inheritdoc IBatchedMessageDispatcher
-  function dispatchMessageBatch(uint256 _toChainId, MessageLib.Message[] calldata _messages)
-    external
-    returns (bytes32)
-  {
+  function dispatchMessageBatch(
+    uint256 _toChainId,
+    MessageLib.Message[] calldata _messages
+  ) external returns (bytes32) {
     _checkDispatchParams(_toChainId);
 
     uint256 _nonce = _incrementNonce();

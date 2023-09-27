@@ -8,7 +8,10 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 const applyAlias = (address: string) =>
   '0x' +
-  BigInt.asUintN(160, BigInt(address) + BigInt('0x1111000000000000000000000000000000001111'))
+  BigInt.asUintN(
+    160,
+    BigInt(address) + BigInt('0x1111000000000000000000000000000000001111'),
+  )
     .toString(16)
     .padStart(40, '0');
 

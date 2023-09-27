@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.16;
 
-import { AddressAliasHelper } from "@arbitrum/nitro-contracts/src/libraries/AddressAliasHelper.sol";
-
-import "../interfaces/IMessageExecutor.sol";
-import "../libraries/MessageLib.sol";
+import { IMessageDispatcher } from "../interfaces/IMessageDispatcher.sol";
+import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
+import { AddressAliasHelper } from "../libraries/AddressAliasHelper.sol";
+import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
  * @title MessageExecutorArbitrum contract

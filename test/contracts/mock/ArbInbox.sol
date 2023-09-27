@@ -3,12 +3,11 @@
 
 pragma solidity ^0.8.16;
 
-import "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
-import "@arbitrum/nitro-contracts/src/bridge/IBridge.sol";
+import { IBridge } from "@arbitrum/nitro-contracts/src/bridge/IBridge.sol";
+import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
+import { ISequencerInbox } from "@arbitrum/nitro-contracts/src/bridge/ISequencerInbox.sol";
 
-import "@arbitrum/nitro-contracts/src/bridge/Messages.sol";
-import "@arbitrum/nitro-contracts/src/mocks/BridgeStub.sol";
-import { L2_MSG, L1MessageType_L2FundedByL1, L1MessageType_submitRetryableTx, L2MessageType_unsignedEOATx, L2MessageType_unsignedContractTx } from "@arbitrum/nitro-contracts/src/libraries/MessageTypes.sol";
+import { L2_MSG } from "@arbitrum/nitro-contracts/src/libraries/MessageTypes.sol";
 
 contract ArbInbox is IInbox {
   IBridge public override bridge;
@@ -168,12 +167,10 @@ contract ArbInbox is IInbox {
 
   function postUpgradeInit(IBridge _bridge) external {}
 
-  function calculateRetryableSubmissionFee(uint256, uint256)
-    external
-    pure
-    override
-    returns (uint256)
-  {
+  function calculateRetryableSubmissionFee(
+    uint256,
+    uint256
+  ) external pure override returns (uint256) {
     revert("NOT_IMPLEMENTED");
   }
 }

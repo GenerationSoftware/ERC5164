@@ -2,15 +2,13 @@
 
 pragma solidity ^0.8.16;
 
-import "forge-std/Test.sol";
+import { Test } from "forge-std/Test.sol";
 
-import { AddressAliasHelper } from "@arbitrum/nitro-contracts/src/libraries/AddressAliasHelper.sol";
-import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
+import { AddressAliasHelper } from "../../../src/libraries/AddressAliasHelper.sol";
+import { MessageLib } from "../../../src/libraries/MessageLib.sol";
 
-import { IMessageDispatcher } from "../../../src/interfaces/IMessageDispatcher.sol";
 import { MessageExecutorArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
 import { MessageDispatcherArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
-import "../../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../../contracts/Greeter.sol";
 

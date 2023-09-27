@@ -2,14 +2,11 @@
 
 pragma solidity ^0.8.16;
 
-import "forge-std/Test.sol";
+import { Test } from "forge-std/Test.sol";
 
-import { IMessageDispatcher } from "../../src/interfaces/IMessageDispatcher.sol";
-import { IMessageExecutor } from "../../src/interfaces/IMessageExecutor.sol";
-
-import "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
-import "../../src/ethereum-polygon/EthereumToPolygonExecutor.sol";
-import "../../src/libraries/MessageLib.sol";
+import { MessageDispatcherPolygon } from "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
+import { MessageExecutorPolygon } from "../../src/ethereum-polygon/EthereumToPolygonExecutor.sol";
+import { MessageLib } from "../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../contracts/Greeter.sol";
 

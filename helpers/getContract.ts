@@ -50,7 +50,9 @@ export const getContractAddress = async (
   let address = '';
 
   const deploymentFolderPath =
-    deployer === 'Hardhat' ? deploymentFolderPathHardhat : deploymentFolderPathForge;
+    deployer === 'Hardhat'
+      ? deploymentFolderPathHardhat
+      : deploymentFolderPathForge;
 
   const deploymentPath = `${__dirname.slice(0, __dirname.lastIndexOf('/'))}/${
     deploymentFolderPath[chainId]

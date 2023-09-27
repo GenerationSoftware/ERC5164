@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.16;
 
-import "../../src/abstract/ExecutorAware.sol";
+import { ExecutorAware } from "../../src/abstract/ExecutorAware.sol";
 
 contract Greeter is ExecutorAware {
   string public greeting;

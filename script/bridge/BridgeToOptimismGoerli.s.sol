@@ -2,14 +2,8 @@
 
 pragma solidity ^0.8.16;
 
-import "forge-std/Script.sol";
-
-import { ICrossDomainMessenger as IOptimismBridge } from "@eth-optimism/contracts/libraries/bridge/ICrossDomainMessenger.sol";
 import { DeployedContracts } from "../helpers/DeployedContracts.sol";
-
-import { IMessageDispatcher } from "../../src/interfaces/IMessageDispatcher.sol";
 import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
-import "../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../../test/contracts/Greeter.sol";
 

@@ -3,7 +3,8 @@
 pragma solidity ^0.8.16;
 
 import { Script } from "forge-std/Script.sol";
-import { ICrossDomainMessenger } from "@eth-optimism/contracts/libraries/bridge/ICrossDomainMessenger.sol";
+
+import { ICrossDomainMessenger } from "../../src/vendor/optimism/ICrossDomainMessenger.sol";
 import { DeployedContracts } from "../helpers/DeployedContracts.sol";
 
 import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
@@ -15,7 +16,11 @@ contract DeployMessageDispatcherToEthereumMainnet is Script {
   function run() public {
     vm.broadcast();
 
-    new MessageDispatcherOptimism(ICrossDomainMessenger(proxyOVML1CrossDomainMessenger), 10);
+    new MessageDispatcherOptimism(
+      ICrossDomainMessenger(proxyOVML1CrossDomainMessenger),
+      10,
+      1_920_000
+    );
 
     vm.stopBroadcast();
   }

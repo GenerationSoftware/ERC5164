@@ -28,10 +28,9 @@ abstract contract DeployedContracts is Script {
 
   /* ============ Helpers ============ */
 
-  function _getDeploymentArtifacts(string memory _deploymentArtifactsPath)
-    internal
-    returns (string[] memory)
-  {
+  function _getDeploymentArtifacts(
+    string memory _deploymentArtifactsPath
+  ) internal returns (string[] memory) {
     string[] memory inputs = new string[](5);
     inputs[0] = "ls";
     inputs[1] = "-m";
