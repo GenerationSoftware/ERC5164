@@ -14,7 +14,7 @@ contract DeployMessageDispatcherToEthereumMainnet is Script {
   address public proxyOVML1CrossDomainMessenger = 0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1;
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     new MessageDispatcherOptimism(
       ICrossDomainMessenger(proxyOVML1CrossDomainMessenger),
@@ -30,7 +30,7 @@ contract DeployMessageExecutorToOptimism is Script {
   address public l2CrossDomainMessenger = 0x4200000000000000000000000000000000000007;
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     new MessageExecutorOptimism(ICrossDomainMessenger(l2CrossDomainMessenger));
 
@@ -48,7 +48,7 @@ contract SetMessageExecutor is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     setMessageExecutor();
 
@@ -66,7 +66,7 @@ contract SetMessageDispatcher is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     setMessageDispatcher();
 

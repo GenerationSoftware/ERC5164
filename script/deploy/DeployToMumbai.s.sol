@@ -15,7 +15,7 @@ contract DeployMessageDispatcherToGoerli is Script {
   address public fxRoot = 0x3d1d3E34f7fB6D26245E6640E1c50710eFFf15bA;
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     new MessageDispatcherPolygon(checkpointManager, fxRoot, 80001);
 
@@ -27,7 +27,7 @@ contract DeployMessageExecutorToMumbai is Script {
   address public fxChild = 0xCf73231F28B7331BBe3124B907840A94851f9f11;
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     new MessageExecutorPolygon(fxChild);
 
@@ -45,7 +45,7 @@ contract SetFxChildTunnel is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     setFxChildTunnel();
 
@@ -63,7 +63,7 @@ contract SetFxRootTunnel is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     setFxRootTunnel();
 
@@ -73,7 +73,7 @@ contract SetFxRootTunnel is DeployedContracts {
 
 contract DeployGreeterToMumbai is DeployedContracts {
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     MessageExecutorPolygon _messageExecutor = _getMessageExecutorPolygon();
     new Greeter(address(_messageExecutor), "Hello from L2");

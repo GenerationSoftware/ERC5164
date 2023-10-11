@@ -283,6 +283,14 @@ function _msgSender() internal view returns (address payable _signer);
 | Optimism Goerli | [EthereumToOptimismExecutor](./src/ethereum-optimism/EthereumToOptimismExecutor.sol)         | [0xc5165406dB791549f0D2423D1483c1EA10A3A206](https://goerli-optimism.etherscan.io/address/0xc5165406dB791549f0D2423D1483c1EA10A3A206) |
 | Optimism Goerli | [Greeter](./test/contracts/Greeter.sol)                                                      | [0x50281C11B6a18d0613F507fD2E7a1ADd712De7D8](https://goerli-optimism.etherscan.io/address/0x50281C11B6a18d0613F507fD2E7a1ADd712De7D8) |
 
+#### Ethereum Goerli -> Optimism Goerli (second deployment with custom gas limits)
+
+| Network         | Contract                                                                                     | Address                                                                                                                               |
+| --------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Ethereum Goerli | [EthereumToOptimismDispatcher.sol](./src/ethereum-optimism/EthereumToOptimismDispatcher.sol) | [0x177B14c6b571262057C3c30E3AE6bB044F62e55c](https://goerli.etherscan.io/address/0x177B14c6b571262057C3c30E3AE6bB044F62e55c)          |
+| Optimism Goerli | [EthereumToOptimismExecutor](./src/ethereum-optimism/EthereumToOptimismExecutor.sol)         | [0x59Ba766ff229c21b97184647292706039aF63dA1](https://goerli-optimism.etherscan.io/address/0x59Ba766ff229c21b97184647292706039aF63dA1) |
+| Optimism Goerli | [Greeter](./test/contracts/Greeter.sol)                                                      | [0x6D8c6c9408C7073b17Acb7bA1eBc541fb57c1aef](https://goerli-optimism.etherscan.io/address/0x6D8c6c9408C7073b17Acb7bA1eBc541fb57c1aef) |
+
 #### Ethereum Goerli -> Polygon Mumbai
 
 | Network         | Contract                                                                              | Address                                                                                                                         |

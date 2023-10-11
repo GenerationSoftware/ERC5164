@@ -14,7 +14,7 @@ contract DeployMessageDispatcherToGoerli is Script {
   address public delayedInbox = 0x6BEbC4925716945D46F0Ec336D5C2564F419682C;
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     new MessageDispatcherArbitrum(IInbox(delayedInbox), 421613);
 
@@ -24,7 +24,7 @@ contract DeployMessageDispatcherToGoerli is Script {
 
 contract DeployMessageExecutorToArbitrumGoerli is Script {
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     new MessageExecutorArbitrum();
 
@@ -42,7 +42,7 @@ contract SetMessageExecutor is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     setMessageExecutor();
 
@@ -60,7 +60,7 @@ contract SetMessageDispatcher is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     setMessageDispatcher();
 
@@ -75,7 +75,7 @@ contract DeployGreeterToArbitrumGoerli is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     deployGreeter();
 

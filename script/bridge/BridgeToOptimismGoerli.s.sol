@@ -19,7 +19,7 @@ contract BridgeToOptimismGoerli is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     bridgeToOptimism();
 

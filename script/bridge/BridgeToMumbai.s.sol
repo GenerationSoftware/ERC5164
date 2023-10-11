@@ -22,7 +22,7 @@ contract BridgeToMumbai is DeployedContracts {
   }
 
   function run() public {
-    vm.broadcast();
+    vm.startBroadcast();
 
     bridgeToMumbai();
 
