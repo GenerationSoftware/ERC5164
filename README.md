@@ -262,8 +262,8 @@ function _msgSender() internal view returns (address payable _signer);
 
 | Network  | Contract                                                                                     | Address                                                                                                                          |
 | -------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Ethereum | [EthereumToOptimismDispatcher.sol](./src/ethereum-optimism/EthereumToOptimismDispatcher.sol) | [0xa8f85bAB964D7e6bE938B54Bf4b29A247A88CD9d](https://etherscan.io/address/0xa8f85bAB964D7e6bE938B54Bf4b29A247A88CD9d)            |
-| Optimism | [EthereumToOptimismExecutor](./src/ethereum-optimism/EthereumToOptimismExecutor.sol)         | [0x890a87E71E731342a6d10e7628bd1F0733ce3296](https://optimistic.etherscan.io/address/0x890a87E71E731342a6d10e7628bd1F0733ce3296) |
+| Ethereum | [EthereumToOptimismDispatcher.sol](./src/ethereum-optimism/EthereumToOptimismDispatcher.sol) | [0x2A34E6cae749876FB8952aD7d2fA486b00F0683F](https://etherscan.io/address/0x2A34E6cae749876FB8952aD7d2fA486b00F0683F)            |
+| Optimism | [EthereumToOptimismExecutor](./src/ethereum-optimism/EthereumToOptimismExecutor.sol)         | [0x139f6dD114a9C45Ba43eE22C5e03c53de0c13225](https://optimistic.etherscan.io/address/0x139f6dD114a9C45Ba43eE22C5e03c53de0c13225) |
 
 ### Testnet
 
@@ -370,21 +370,31 @@ open coverage/index.html
 
 ### Deployment
 
-You can use the following commands to deploy on testnet.
+You can use the following commands to deploy on mainnet and testnet.
 
-#### Ethereum Goerli to Arbitrum Goerli bridge
+#### Mainnet
+
+##### Ethereum to Optimism bridge
+
+```
+yarn deploy:optimism
+```
+
+#### Testnet
+
+##### Ethereum Goerli to Arbitrum Goerli bridge
 
 ```
 yarn deploy:arbitrumGoerli
 ```
 
-#### Ethereum Goerli to Optimism Goerli bridge
+##### Ethereum Goerli to Optimism Goerli bridge
 
 ```
 yarn deploy:optimismGoerli
 ```
 
-#### Ethereum Goerli to Polygon Mumbai bridge
+##### Ethereum Goerli to Polygon Mumbai bridge
 
 ```
 yarn deploy:mumbai
