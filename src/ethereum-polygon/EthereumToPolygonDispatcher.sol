@@ -4,8 +4,7 @@ pragma solidity ^0.8.16;
 
 import { FxBaseRootTunnel } from "@maticnetwork/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol";
 
-import { IMessageDispatcher, ISingleMessageDispatcher } from "../interfaces/ISingleMessageDispatcher.sol";
-import { IBatchedMessageDispatcher } from "../interfaces/IBatchedMessageDispatcher.sol";
+import { IMessageDispatcher, IBatchMessageDispatcher } from "../interfaces/IBatchMessageDispatcher.sol";
 
 import { MessageLib } from "../libraries/MessageLib.sol";
 
@@ -14,11 +13,7 @@ import { MessageLib } from "../libraries/MessageLib.sol";
  * @notice The MessageDispatcherPolygon contract allows a user or contract to send messages from Ethereum to Polygon.
  *         It lives on the Ethereum chain and communicates with the `MessageExecutorPolygon` contract on the Polygon chain.
  */
-contract MessageDispatcherPolygon is
-  ISingleMessageDispatcher,
-  IBatchedMessageDispatcher,
-  FxBaseRootTunnel
-{
+contract MessageDispatcherPolygon is IBatchMessageDispatcher, FxBaseRootTunnel {
   /* ============ Variables ============ */
 
   /// @notice Nonce used to compute unique `messageId`s.
@@ -46,7 +41,7 @@ contract MessageDispatcherPolygon is
 
   /* ============ External Functions ============ */
 
-  /// @inheritdoc ISingleMessageDispatcher
+  /// @inheritdoc IMessageDispatcher
   function dispatchMessage(
     uint256 _toChainId,
     address _to,
@@ -67,7 +62,7 @@ contract MessageDispatcherPolygon is
     return _messageId;
   }
 
-  /// @inheritdoc IBatchedMessageDispatcher
+  /// @inheritdoc IBatchMessageDispatcher
   function dispatchMessageBatch(
     uint256 _toChainId,
     MessageLib.Message[] calldata _messages

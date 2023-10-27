@@ -63,6 +63,23 @@ contract MessageDispatcherArbitrumUnitTest is Test {
     uint256 indexed ticketId
   );
 
+  event MessageDispatchedAndProcessed(
+    bytes32 indexed messageId,
+    address indexed from,
+    uint256 toChainId,
+    address to,
+    bytes data,
+    uint256 indexed ticketId
+  );
+
+  event MessageBatchDispatchedAndProcessed(
+    bytes32 indexed messageId,
+    address indexed from,
+    uint256 toChainId,
+    MessageLib.Message[] messages,
+    uint256 indexed ticketId
+  );
+
   /* ============ Setup ============ */
   function setUp() public {
     dispatcher = new MessageDispatcherArbitrum(inbox, toChainId);
@@ -196,6 +213,73 @@ contract MessageDispatcherArbitrumUnitTest is Test {
       _messageId,
       messages,
       address(this),
+      msg.sender,
+      gasLimit,
+      maxSubmissionCost,
+      gasPriceBid
+    );
+
+    assertEq(_ticketId, _randomNumber);
+  }
+
+  /* ============ DispatchAndProcess  ============ */
+
+  function testDispatchAndProcessMessage() public {
+    setExecutor();
+
+    MessageLib.Message memory _message = messages[0];
+
+    bytes32 _expectedMessageId = MessageLib.computeMessageId(
+      nonce,
+      address(this),
+      _message.to,
+      _message.data
+    );
+
+    uint256 _randomNumber = inbox.generateRandomNumber();
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageDispatchedAndProcessed(
+      _expectedMessageId,
+      address(this),
+      toChainId,
+      _message.to,
+      _message.data,
+      _randomNumber
+    );
+
+    uint256 _ticketId = dispatcher.dispatchAndProcessMessage(
+      toChainId,
+      _message.to,
+      _message.data,
+      msg.sender,
+      gasLimit,
+      maxSubmissionCost,
+      gasPriceBid
+    );
+
+    assertEq(_ticketId, _randomNumber);
+  }
+
+  function testDispatchAndProcessMessageBatch() public {
+    setExecutor();
+
+    bytes32 _expectedMessageId = MessageLib.computeMessageBatchId(nonce, address(this), messages);
+
+    uint256 _randomNumber = inbox.generateRandomNumber();
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageBatchDispatchedAndProcessed(
+      _expectedMessageId,
+      address(this),
+      toChainId,
+      messages,
+      _randomNumber
+    );
+
+    uint256 _ticketId = dispatcher.dispatchAndProcessMessageBatch(
+      toChainId,
+      messages,
       msg.sender,
       gasLimit,
       maxSubmissionCost,

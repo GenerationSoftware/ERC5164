@@ -33,7 +33,7 @@ For most bridges, you only have to call `dispatchMessage` or `dispatchMessageBat
 
 ### Dispatch a message
 
-To dispatch a message from Ethereum to the L2 of your choice, you have to interact with the [ISingleMessageDispatcher](./src/interfaces/ISingleMessageDispatcher.sol) contract and call the following function.
+To dispatch a message from Ethereum to the L2 of your choice, you have to interact with the [IMessageDispatcher](./src/interfaces/IMessageDispatcher.sol) contract and call the following function.
 
 ```solidity
 /**
@@ -52,13 +52,13 @@ function dispatchMessage(
 ) external returns (bytes32);
 ```
 
-- `toChainId`: id of the chain to which you want to dispatch the message
+- `toChainId`: ID of the chain to which you want to dispatch the message
 - `to`: address of the contract that will receive the message
 - `data`: message that you want to be executed on L2
 
 ### Dispatch a batch messages
 
-To dispatch a batch of messages from Ethereum to the L2 of your choice, you have to interact with the [IBatchedMessageDispatcher](./src/interfaces/IBatchedMessageDispatcher.sol) contract and call the following function.
+To dispatch a batch of messages from Ethereum to the L2 of your choice, you have to interact with the [IBatchMessageDispatcher](./src/interfaces/IBatchMessageDispatcher.sol) contract and call the following function.
 
 ```solidity
 /**
@@ -75,7 +75,7 @@ function dispatchMessageBatch(
 ) external returns (bytes32);
 ```
 
-- `toChainId`: id of the chain to which you want to dispatch the message
+- `toChainId`: ID of the chain to which you want to dispatch the message
 - `messages`: array of Message that you want to be executed on L2
 
 ```solidity
@@ -121,7 +121,7 @@ The `processMessage` function requires the same transaction parameters as the Ar
 /**
  * @notice Process message that has been dispatched.
  * @dev The transaction hash must match the one stored in the `dispatched` mapping.
- * @dev `_from` is passed as `callValueRefundAddress` cause this address can cancel the retryably ticket.
+ * @dev `_from` is passed as `_callValueRefundAddress` cause this address can cancel the retryable ticket.
  * @dev We store `_message` in memory to avoid a stack too deep error.
  * @param _messageId ID of the message to process
  * @param _from Address who dispatched the `_data`
@@ -131,7 +131,7 @@ The `processMessage` function requires the same transaction parameters as the Ar
  * @param _gasLimit Maximum amount of gas required for the `_messages` to be executed
  * @param _maxSubmissionCost Max gas deducted from user's L2 balance to cover base submission fee
  * @param _gasPriceBid Gas price bid for L2 execution
- * @return uint256 Id of the retryable ticket that was created
+ * @return uint256 ID of the retryable ticket that was created
  */
 function processMessage(
   bytes32 messageId,
