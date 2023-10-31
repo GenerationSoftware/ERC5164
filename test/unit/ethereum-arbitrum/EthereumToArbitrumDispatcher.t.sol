@@ -239,14 +239,16 @@ contract MessageDispatcherArbitrumUnitTest is Test {
     uint256 _randomNumber = inbox.generateRandomNumber();
 
     vm.expectEmit(true, true, true, true, address(dispatcher));
-    emit MessageDispatchedAndProcessed(
+    emit MessageDispatched(
       _expectedMessageId,
       address(this),
       toChainId,
       _message.to,
-      _message.data,
-      _randomNumber
+      _message.data
     );
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageProcessed(_expectedMessageId, address(this), _randomNumber);
 
     uint256 _ticketId = dispatcher.dispatchAndProcessMessage(
       toChainId,
@@ -269,13 +271,10 @@ contract MessageDispatcherArbitrumUnitTest is Test {
     uint256 _randomNumber = inbox.generateRandomNumber();
 
     vm.expectEmit(true, true, true, true, address(dispatcher));
-    emit MessageBatchDispatchedAndProcessed(
-      _expectedMessageId,
-      address(this),
-      toChainId,
-      messages,
-      _randomNumber
-    );
+    emit MessageBatchDispatched(_expectedMessageId, address(this), toChainId, messages);
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageBatchProcessed(_expectedMessageId, address(this), _randomNumber);
 
     uint256 _ticketId = dispatcher.dispatchAndProcessMessageBatch(
       toChainId,

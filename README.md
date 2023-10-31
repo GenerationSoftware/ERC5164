@@ -58,7 +58,7 @@ function dispatchMessage(
 
 ### Dispatch a batch messages
 
-To dispatch a batch of messages from Ethereum to the L2 of your choice, you have to interact with the [IBatchMessageDispatcher](./src/interfaces/IBatchMessageDispatcher.sol) contract and call the following function.
+To dispatch a batch of messages from Ethereum to the L2 of your choice, you have to interact with the [IBatchMessageDispatcher](./src/interfaces/extensions/IBatchMessageDispatcher.sol) contract and call the following function.
 
 ```solidity
 /**

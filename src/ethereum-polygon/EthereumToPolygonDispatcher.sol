@@ -4,7 +4,7 @@ pragma solidity ^0.8.16;
 
 import { FxBaseRootTunnel } from "@maticnetwork/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol";
 
-import { IMessageDispatcher, IBatchMessageDispatcher } from "../interfaces/IBatchMessageDispatcher.sol";
+import { IMessageDispatcher, IBatchMessageDispatcher } from "../interfaces/extensions/IBatchMessageDispatcher.sol";
 
 import { MessageLib } from "../libraries/MessageLib.sol";
 

@@ -4,7 +4,7 @@ pragma solidity ^0.8.16;
 import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 
 import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
-import { IMessageDispatcher, IBatchMessageDispatcher, IMessageDispatcherArbitrum } from "../interfaces/IMessageDispatcherArbitrum.sol";
+import { IMessageDispatcher, IBatchMessageDispatcher, IMessageDispatcherArbitrum } from "../interfaces/extensions/IMessageDispatcherArbitrum.sol";
 
 import { MessageLib } from "../libraries/MessageLib.sol";
 
@@ -208,7 +208,8 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
       _message
     );
 
-    emit MessageDispatchedAndProcessed(_messageId, msg.sender, _toChainId, _to, _data, ticketId);
+    emit MessageDispatched(_messageId, msg.sender, _toChainId, _to, _data);
+    emit MessageProcessed(_messageId, msg.sender, ticketId);
   }
 
   /**
@@ -246,13 +247,8 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
       _messageBatch
     );
 
-    emit MessageBatchDispatchedAndProcessed(
-      _messageId,
-      msg.sender,
-      _toChainId,
-      _messages,
-      ticketId
-    );
+    emit MessageBatchDispatched(_messageId, msg.sender, _toChainId, _messages);
+    emit MessageBatchProcessed(_messageId, msg.sender, ticketId);
   }
 
   /**

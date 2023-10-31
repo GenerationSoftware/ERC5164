@@ -36,40 +36,6 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
   );
 
   /**
-   * @notice Emitted when a message has successfully been dispatched and put in the Arbitrum inbox.
-   * @param messageId ID uniquely identifying the message
-   * @param from Address that dispatched the message
-   * @param toChainId ID of the chain receiving the message
-   * @param to Address that will receive the message
-   * @param data Data that was dispatched
-   * @param ticketId ID of the newly created retryable ticket
-   */
-  event MessageDispatchedAndProcessed(
-    bytes32 indexed messageId,
-    address indexed from,
-    uint256 toChainId,
-    address to,
-    bytes data,
-    uint256 indexed ticketId
-  );
-
-  /**
-   * @notice Emitted when a batch of messages has successfully been dispatched and put in the Arbitrum inbox.
-   * @param messageId ID uniquely identifying the batch of messages
-   * @param from Address that dispatched the batch of messages
-   * @param toChainId ID of the chain receiving the batch of messages
-   * @param messages Array of Message that was dispatched
-   * @param ticketId ID of the newly created retryable ticket
-   */
-  event MessageBatchDispatchedAndProcessed(
-    bytes32 indexed messageId,
-    address indexed from,
-    uint256 toChainId,
-    MessageLib.Message[] messages,
-    uint256 indexed ticketId
-  );
-
-  /**
    * @notice Process message that has been dispatched.
    * @dev Must compute and return the ID of the retryable ticket that was created.
    * @dev Must emit the `MessageProcessed` event when successfully processed.
@@ -105,7 +71,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
    * @param gasLimit Maximum amount of gas required for the `messages` to be executed
    * @param maxSubmissionCost Max gas deducted from user's L2 balance to cover base submission fee
    * @param gasPriceBid Gas price bid for L2 execution
-   * @return ID of the retryable ticket that was created
+   * @return ticketId ID of the retryable ticket that was created
    */
   function processMessageBatch(
     bytes32 messageId,
@@ -128,7 +94,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
    * @param gasLimit Maximum amount of gas required for the message to be executed
    * @param maxSubmissionCost Max gas deducted from user's L2 balance to cover base submission fee
    * @param gasPriceBid Gas price bid for L2 execution
-   * @return ID of the retryable ticket that was created
+   * @return ticketId ID of the retryable ticket that was created
    */
   function dispatchAndProcessMessage(
     uint256 toChainId,
@@ -150,7 +116,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
    * @param gasLimit Maximum amount of gas required for the message to be executed
    * @param maxSubmissionCost Max gas deducted from user's L2 balance to cover base submission fee
    * @param gasPriceBid Gas price bid for L2 execution
-   * @return ID of the retryable ticket that was created
+   * @return ticketId ID of the retryable ticket that was created
    */
   function dispatchAndProcessMessageBatch(
     uint256 toChainId,

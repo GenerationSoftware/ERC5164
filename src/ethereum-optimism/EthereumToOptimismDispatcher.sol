@@ -4,7 +4,7 @@ pragma solidity ^0.8.16;
 import { ICrossDomainMessenger } from "../vendor/optimism/ICrossDomainMessenger.sol";
 
 import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
-import { IMessageDispatcher, IBatchMessageDispatcher, IMessageDispatcherOptimism } from "../interfaces/IMessageDispatcherOptimism.sol";
+import { IMessageDispatcher, IBatchMessageDispatcher, IMessageDispatcherOptimism } from "../interfaces/extensions/IMessageDispatcherOptimism.sol";
 
 import { MessageLib } from "../libraries/MessageLib.sol";
 

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.16;
 
-import { IMessageDispatcher } from "./IMessageDispatcher.sol";
-import { MessageLib } from "../../src/libraries/MessageLib.sol";
+import { IMessageDispatcher } from "../IMessageDispatcher.sol";
+import { MessageLib } from "../../libraries/MessageLib.sol";
 
 /**
  * @title ERC-5164: Cross-Chain Execution Standard, optional BatchMessageDispatcher extension
