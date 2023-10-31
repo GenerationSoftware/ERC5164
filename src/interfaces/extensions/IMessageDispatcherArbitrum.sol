@@ -86,7 +86,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
   /**
    * @notice Dispatch and process message in one transaction.
    * @dev Must compute and return the ID of the retryable ticket that was created.
-   * @dev Must emit the `MessageDispatchedAndProcessed` event when successfully processed.
+   * @dev Must emit the `MessageDispatched` and `MessageProcessed` events when successfully dispatched and processed.
    * @param toChainId ID of the receiving chain
    * @param to Address on the receiving chain that will receive `data`
    * @param data Data dispatched to the receiving chain
@@ -109,7 +109,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
   /**
    * @notice Dispatch and process a batch of messages in one transaction.
    * @dev Must compute and return the ID of the retryable ticket that was created.
-   * @dev Must emit the `MessageBatchDispatchedAndProcessed` event when successfully processed.
+   * @dev Must emit the `MessageBatchDispatched` and `MessageBatchProcessed` events when successfully dispatched and processed.
    * @param toChainId ID of the receiving chain
    * @param messages Array of Message to dispatch
    * @param refundAddress Address that will receive the `excessFeeRefund` amount if any
