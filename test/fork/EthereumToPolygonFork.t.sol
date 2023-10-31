@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
-
 pragma solidity ^0.8.16;
 
 import { Test } from "forge-std/Test.sol";
 
 import { MessageDispatcherPolygon } from "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
 import { MessageExecutorPolygon } from "../../src/ethereum-polygon/EthereumToPolygonExecutor.sol";
+
+import { IMessageExecutor, IBatchMessageExecutor } from "../../src/interfaces/extensions/IBatchMessageExecutor.sol";
 import { MessageLib } from "../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../contracts/Greeter.sol";
@@ -313,7 +314,11 @@ contract EthereumToPolygonForkTest is Test {
     bytes32 _expectedMessageId = MessageLib.computeMessageId(nonce, address(this), _to, _data);
 
     vm.expectRevert(
-      abi.encodeWithSelector(MessageLib.MessageFailure.selector, _expectedMessageId, bytes(""))
+      abi.encodeWithSelector(
+        IMessageExecutor.MessageFailure.selector,
+        _expectedMessageId,
+        bytes("")
+      )
     );
 
     executor.processMessageFromRoot(
@@ -416,7 +421,7 @@ contract EthereumToPolygonForkTest is Test {
 
     vm.expectRevert(
       abi.encodeWithSelector(
-        MessageLib.MessageBatchFailure.selector,
+        IBatchMessageExecutor.MessageBatchFailure.selector,
         _expectedMessageId,
         0,
         bytes("")

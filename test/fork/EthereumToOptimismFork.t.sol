@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { Test } from "forge-std/Test.sol";
@@ -7,7 +6,7 @@ import { Test } from "forge-std/Test.sol";
 import { ICrossDomainMessenger } from "../../src/vendor/optimism/ICrossDomainMessenger.sol";
 import { AddressAliasHelper } from "../../src/libraries/AddressAliasHelper.sol";
 
-import { IMessageExecutor } from "../../src/interfaces/IMessageExecutor.sol";
+import { IMessageExecutor, IBatchMessageExecutor } from "../../src/interfaces/extensions/IBatchMessageExecutor.sol";
 
 import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
 import { MessageExecutorOptimism } from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
@@ -389,7 +388,7 @@ contract EthereumToOptimismForkTest is Test {
       0,
       defaultGasLimit,
       abi.encodeCall(
-        IMessageExecutor.executeMessageBatch,
+        IBatchMessageExecutor.executeMessageBatch,
         (_messages, _expectedMessageId, fromChainId, address(this))
       )
     );

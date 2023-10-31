@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { IMessageDispatcher } from "../interfaces/IMessageDispatcher.sol";
-import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
+import { IBatchMessageExecutor, IMessageExecutor } from "../interfaces/extensions/IBatchMessageExecutor.sol";
 import { AddressAliasHelper } from "../libraries/AddressAliasHelper.sol";
 import { MessageLib } from "../libraries/MessageLib.sol";
 
@@ -12,7 +11,7 @@ import { MessageLib } from "../libraries/MessageLib.sol";
  * @notice The MessageExecutorArbitrum contract executes messages from the Ethereum chain.
  *         These messages are sent by the `MessageDispatcherArbitrum` contract which lives on the Ethereum chain.
  */
-contract MessageExecutorArbitrum is IMessageExecutor {
+contract MessageExecutorArbitrum is IBatchMessageExecutor {
   /* ============ Variables ============ */
 
   /// @notice Address of the dispatcher contract on the Ethereum chain.
@@ -46,7 +45,7 @@ contract MessageExecutorArbitrum is IMessageExecutor {
     emit MessageIdExecuted(_fromChainId, _messageId);
   }
 
-  /// @inheritdoc IMessageExecutor
+  /// @inheritdoc IBatchMessageExecutor
   function executeMessageBatch(
     MessageLib.Message[] calldata _messages,
     bytes32 _messageId,

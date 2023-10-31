@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
-import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
+import { IMessageExecutor, IBatchMessageExecutor } from "../interfaces/extensions/IBatchMessageExecutor.sol";
 
 /**
  * @title MessageLib
@@ -20,31 +19,6 @@ library MessageLib {
     address to;
     bytes data;
   }
-
-  /* ============ Events ============ */
-
-  /* ============ Custom Errors ============ */
-
-  /**
-   * @notice Emitted when a messageId has already been executed.
-   * @param messageId ID uniquely identifying the message or message batch that were re-executed
-   */
-  error MessageIdAlreadyExecuted(bytes32 messageId);
-
-  /**
-   * @notice Emitted if a call to a contract fails.
-   * @param messageId ID uniquely identifying the message
-   * @param errorData Error data returned by the call
-   */
-  error MessageFailure(bytes32 messageId, bytes errorData);
-
-  /**
-   * @notice Emitted if a call to a contract fails inside a batch of messages.
-   * @param messageId ID uniquely identifying the batch of messages
-   * @param messageIndex Index of the message
-   * @param errorData Error data returned by the call
-   */
-  error MessageBatchFailure(bytes32 messageId, uint256 messageIndex, bytes errorData);
 
   /* ============ Internal Functions ============ */
 
@@ -114,7 +88,7 @@ library MessageLib {
   ) internal pure returns (bytes memory) {
     return
       abi.encodeCall(
-        IMessageExecutor.executeMessageBatch,
+        IBatchMessageExecutor.executeMessageBatch,
         (messages, messageId, fromChainId, from)
       );
   }
@@ -138,7 +112,7 @@ library MessageLib {
     bool executedMessageId
   ) internal {
     if (executedMessageId) {
-      revert MessageIdAlreadyExecuted(messageId);
+      revert IMessageExecutor.MessageIdAlreadyExecuted(messageId);
     }
 
     _requireContract(to);
@@ -148,7 +122,7 @@ library MessageLib {
     );
 
     if (!_success) {
-      revert MessageFailure(messageId, _returnData);
+      revert IMessageExecutor.MessageFailure(messageId, _returnData);
     }
   }
 
@@ -167,9 +141,9 @@ library MessageLib {
     uint256 fromChainId,
     address from,
     bool executedMessageId
-  ) internal {
+  ) external {
     if (executedMessageId) {
-      revert MessageIdAlreadyExecuted(messageId);
+      revert IMessageExecutor.MessageIdAlreadyExecuted(messageId);
     }
 
     uint256 _messagesLength = messages.length;
@@ -183,7 +157,7 @@ library MessageLib {
       );
 
       if (!_success) {
-        revert MessageBatchFailure(messageId, _messageIndex, _returnData);
+        revert IBatchMessageExecutor.MessageBatchFailure(messageId, _messageIndex, _returnData);
       }
 
       unchecked {
