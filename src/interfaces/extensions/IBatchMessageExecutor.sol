@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.16;
 
-import { IMessageExecutor } from "../IMessageExecutor.sol";
+import { IMessageExecutor, ISingleMessageExecutor } from "./ISingleMessageExecutor.sol";
 import { MessageLib } from "../../libraries/MessageLib.sol";
 
 /**
  * @title BatchMessageExecutor interface
- * @dev IMessageExecutor interface extended to support batch messaging.
- * @notice BatchMessageExecutor interface of the ERC-5164 standard as defined in the EIP.
+ * @dev ISingleMessageExecutor interface extended to support batch messaging.
  */
-interface IBatchMessageExecutor is IMessageExecutor {
+interface IBatchMessageExecutor is ISingleMessageExecutor {
   /**
    * @notice Emitted if a call to a contract fails inside a batch of messages.
    * @param messageId ID uniquely identifying the batch of messages

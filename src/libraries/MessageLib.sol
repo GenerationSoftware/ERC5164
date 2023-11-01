@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.16;
 
-import { IMessageExecutor, IBatchMessageExecutor } from "../interfaces/extensions/IBatchMessageExecutor.sol";
+import {
+  IMessageExecutor,
+  ISingleMessageExecutor
+} from "../interfaces/extensions/ISingleMessageExecutor.sol";
+import { IBatchMessageExecutor } from "../interfaces/extensions/IBatchMessageExecutor.sol";
 
 /**
  * @title MessageLib
@@ -70,7 +74,10 @@ library MessageLib {
     address from
   ) internal pure returns (bytes memory) {
     return
-      abi.encodeCall(IMessageExecutor.executeMessage, (to, data, messageId, fromChainId, from));
+      abi.encodeCall(
+        ISingleMessageExecutor.executeMessage,
+        (to, data, messageId, fromChainId, from)
+      );
   }
 
   /**

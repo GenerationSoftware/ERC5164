@@ -4,7 +4,10 @@ pragma solidity ^0.8.16;
 import { ICrossDomainMessenger } from "../vendor/optimism/ICrossDomainMessenger.sol";
 
 import { IMessageDispatcher } from "../interfaces/IMessageDispatcher.sol";
-import { IBatchMessageExecutor, IMessageExecutor } from "../interfaces/extensions/IBatchMessageExecutor.sol";
+import {
+  ISingleMessageExecutor,
+  IBatchMessageExecutor
+} from "../interfaces/extensions/IBatchMessageExecutor.sol";
 import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
@@ -41,7 +44,7 @@ contract MessageExecutorOptimism is IBatchMessageExecutor {
 
   /* ============ External Functions ============ */
 
-  /// @inheritdoc IMessageExecutor
+  /// @inheritdoc ISingleMessageExecutor
   function executeMessage(
     address _to,
     bytes calldata _data,

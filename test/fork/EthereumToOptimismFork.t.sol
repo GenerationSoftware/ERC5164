@@ -6,10 +6,17 @@ import { Test } from "forge-std/Test.sol";
 import { ICrossDomainMessenger } from "../../src/vendor/optimism/ICrossDomainMessenger.sol";
 import { AddressAliasHelper } from "../../src/libraries/AddressAliasHelper.sol";
 
-import { IMessageExecutor, IBatchMessageExecutor } from "../../src/interfaces/extensions/IBatchMessageExecutor.sol";
+import {
+  ISingleMessageExecutor,
+  IBatchMessageExecutor
+} from "../../src/interfaces/extensions/IBatchMessageExecutor.sol";
 
-import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
-import { MessageExecutorOptimism } from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
+import {
+  MessageDispatcherOptimism
+} from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
+import {
+  MessageExecutorOptimism
+} from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
 import { MessageLib } from "../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../contracts/Greeter.sol";
@@ -330,7 +337,7 @@ contract EthereumToOptimismForkTest is Test {
       0,
       defaultGasLimit,
       abi.encodeCall(
-        IMessageExecutor.executeMessage,
+        ISingleMessageExecutor.executeMessage,
         (_to, _data, _expectedMessageId, fromChainId, address(this))
       )
     );
