@@ -36,12 +36,4 @@ interface IMessageDispatcher {
     address to,
     bytes calldata data
   ) external returns (bytes32);
-
-  /**
-   * @notice Retrieves address of the MessageExecutor contract on the receiving chain.
-   * @dev Must revert if `toChainId` is not supported.
-   * @param toChainId ID of the chain with which MessageDispatcher is communicating
-   * @return MessageExecutor contract address
-   */
-  function getMessageExecutorAddress(uint256 toChainId) external returns (address);
 }

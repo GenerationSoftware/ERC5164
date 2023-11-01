@@ -3,7 +3,11 @@ pragma solidity ^0.8.16;
 
 import { FxBaseRootTunnel } from "@maticnetwork/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol";
 
-import { IMessageDispatcher, IBatchMessageDispatcher } from "../interfaces/extensions/IBatchMessageDispatcher.sol";
+import {
+  IMessageDispatcher,
+  ISingleMessageDispatcher,
+  IBatchMessageDispatcher
+} from "../interfaces/extensions/IBatchMessageDispatcher.sol";
 
 import { MessageLib } from "../libraries/MessageLib.sol";
 
@@ -78,7 +82,7 @@ contract MessageDispatcherPolygon is IBatchMessageDispatcher, FxBaseRootTunnel {
     return _messageId;
   }
 
-  /// @inheritdoc IMessageDispatcher
+  /// @inheritdoc ISingleMessageDispatcher
   function getMessageExecutorAddress(uint256 _chainId) external view returns (address) {
     _checkToChainId(_chainId);
     return address(fxChildTunnel);

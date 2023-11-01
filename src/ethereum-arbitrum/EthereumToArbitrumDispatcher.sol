@@ -4,7 +4,12 @@ pragma solidity ^0.8.16;
 import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 
 import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
-import { IMessageDispatcher, IBatchMessageDispatcher, IMessageDispatcherArbitrum } from "../interfaces/extensions/IMessageDispatcherArbitrum.sol";
+import {
+  IMessageDispatcher,
+  ISingleMessageDispatcher,
+  IBatchMessageDispatcher,
+  IMessageDispatcherArbitrum
+} from "../interfaces/extensions/IMessageDispatcherArbitrum.sol";
 
 import { MessageLib } from "../libraries/MessageLib.sol";
 
@@ -295,7 +300,7 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
     return _getMessageBatchTxHash(_messageId, _from, _messages);
   }
 
-  /// @inheritdoc IMessageDispatcher
+  /// @inheritdoc ISingleMessageDispatcher
   function getMessageExecutorAddress(uint256 _toChainId) external view returns (address) {
     _checkToChainId(_toChainId);
     return address(executor);
