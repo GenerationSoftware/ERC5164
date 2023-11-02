@@ -98,6 +98,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
    * @param gasLimit Maximum amount of gas required for the message to be executed
    * @param maxSubmissionCost Max gas deducted from user's L2 balance to cover base submission fee
    * @param gasPriceBid Gas price bid for L2 execution
+   * @return messageId ID uniquely identifying the message
    * @return ticketId ID of the retryable ticket that was created
    */
   function dispatchAndProcessMessage(
@@ -108,7 +109,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
     uint256 gasLimit,
     uint256 maxSubmissionCost,
     uint256 gasPriceBid
-  ) external payable returns (uint256 ticketId);
+  ) external payable returns (bytes32 messageId, uint256 ticketId);
 
   /**
    * @notice Dispatch and process a batch of messages in one transaction.
@@ -120,6 +121,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
    * @param gasLimit Maximum amount of gas required for the message to be executed
    * @param maxSubmissionCost Max gas deducted from user's L2 balance to cover base submission fee
    * @param gasPriceBid Gas price bid for L2 execution
+   * @return messageId ID uniquely identifying the message
    * @return ticketId ID of the retryable ticket that was created
    */
   function dispatchAndProcessMessageBatch(
@@ -129,7 +131,7 @@ interface IMessageDispatcherArbitrum is IBatchMessageDispatcher {
     uint256 gasLimit,
     uint256 maxSubmissionCost,
     uint256 gasPriceBid
-  ) external payable returns (uint256 ticketId);
+  ) external payable returns (bytes32 messageId, uint256 ticketId);
 
   /**
    * @notice Get transaction hash for a single message.

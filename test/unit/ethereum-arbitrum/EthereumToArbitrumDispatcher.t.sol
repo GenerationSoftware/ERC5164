@@ -5,8 +5,12 @@ import { Test } from "forge-std/Test.sol";
 
 import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 
-import { MessageDispatcherArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
-import { MessageExecutorArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
+import {
+  MessageDispatcherArbitrum
+} from "../../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
+import {
+  MessageExecutorArbitrum
+} from "../../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
 import { MessageLib } from "../../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../../contracts/Greeter.sol";
@@ -249,7 +253,7 @@ contract MessageDispatcherArbitrumUnitTest is Test {
     vm.expectEmit(true, true, true, true, address(dispatcher));
     emit MessageProcessed(_expectedMessageId, address(this), _randomNumber);
 
-    uint256 _ticketId = dispatcher.dispatchAndProcessMessage(
+    (bytes32 _messageId, uint256 _ticketId) = dispatcher.dispatchAndProcessMessage(
       toChainId,
       _message.to,
       _message.data,
@@ -259,6 +263,7 @@ contract MessageDispatcherArbitrumUnitTest is Test {
       gasPriceBid
     );
 
+    assertEq(_messageId, _expectedMessageId);
     assertEq(_ticketId, _randomNumber);
   }
 
@@ -266,7 +271,6 @@ contract MessageDispatcherArbitrumUnitTest is Test {
     setExecutor();
 
     bytes32 _expectedMessageId = MessageLib.computeMessageBatchId(nonce, address(this), messages);
-
     uint256 _randomNumber = inbox.generateRandomNumber();
 
     vm.expectEmit(true, true, true, true, address(dispatcher));
@@ -275,7 +279,7 @@ contract MessageDispatcherArbitrumUnitTest is Test {
     vm.expectEmit(true, true, true, true, address(dispatcher));
     emit MessageBatchProcessed(_expectedMessageId, address(this), _randomNumber);
 
-    uint256 _ticketId = dispatcher.dispatchAndProcessMessageBatch(
+    (bytes32 _messageId, uint256 _ticketId) = dispatcher.dispatchAndProcessMessageBatch(
       toChainId,
       messages,
       msg.sender,
@@ -284,6 +288,7 @@ contract MessageDispatcherArbitrumUnitTest is Test {
       gasPriceBid
     );
 
+    assertEq(_messageId, _expectedMessageId);
     assertEq(_ticketId, _randomNumber);
   }
 

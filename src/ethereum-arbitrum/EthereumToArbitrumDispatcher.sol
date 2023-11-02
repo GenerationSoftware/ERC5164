@@ -178,7 +178,7 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
 
   /**
    * @inheritdoc IMessageDispatcherArbitrum
-   * @dev `msg.sender` is passed as `_callValueRefundAddress` cause this address can cancel the retryable ticket.
+   * @dev `_refundAddress` is passed as `_callValueRefundAddress`, this address can cancel the retryable ticket.
    * @dev We store `_message` in memory to avoid a stack too deep error.
    */
   function dispatchAndProcessMessage(
@@ -189,16 +189,16 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
     uint256 _gasLimit,
     uint256 _maxSubmissionCost,
     uint256 _gasPriceBid
-  ) external payable returns (uint256 ticketId) {
+  ) external payable returns (bytes32 messageId, uint256 ticketId) {
     address _executorAddress = address(executor);
     _checkProcessParams(_executorAddress, _refundAddress);
     _checkToChainId(_toChainId);
 
-    bytes32 _messageId = _computeMessageId(msg.sender, _to, _data);
+    messageId = _computeMessageId(msg.sender, _to, _data);
     bytes memory _message = MessageLib.encodeMessage(
       _to,
       _data,
-      _messageId,
+      messageId,
       block.chainid,
       msg.sender
     );
@@ -207,19 +207,19 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
       _executorAddress,
       _maxSubmissionCost,
       _refundAddress,
-      msg.sender,
+      _refundAddress,
       _gasLimit,
       _gasPriceBid,
       _message
     );
 
-    emit MessageDispatched(_messageId, msg.sender, _toChainId, _to, _data);
-    emit MessageProcessed(_messageId, msg.sender, ticketId);
+    emit MessageDispatched(messageId, msg.sender, _toChainId, _to, _data);
+    emit MessageProcessed(messageId, msg.sender, ticketId);
   }
 
   /**
    * @inheritdoc IMessageDispatcherArbitrum
-   * @dev `msg.sender` is passed as `_callValueRefundAddress` cause this address can cancel the retryable ticket.
+   * @dev `_refundAddress` is passed as `_callValueRefundAddress`, this address can cancel the retryable ticket.
    * @dev We store `_messageBatch` in memory to avoid a stack too deep error.
    */
   function dispatchAndProcessMessageBatch(
@@ -229,15 +229,15 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
     uint256 _gasLimit,
     uint256 _maxSubmissionCost,
     uint256 _gasPriceBid
-  ) external payable returns (uint256 ticketId) {
+  ) external payable returns (bytes32 messageId, uint256 ticketId) {
     address _executorAddress = address(executor);
     _checkProcessParams(_executorAddress, _refundAddress);
     _checkToChainId(_toChainId);
 
-    bytes32 _messageId = _computeMessageBatchId(msg.sender, _messages);
+    messageId = _computeMessageBatchId(msg.sender, _messages);
     bytes memory _messageBatch = MessageLib.encodeMessageBatch(
       _messages,
-      _messageId,
+      messageId,
       block.chainid,
       msg.sender
     );
@@ -246,14 +246,14 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
       _executorAddress,
       _maxSubmissionCost,
       _refundAddress,
-      msg.sender,
+      _refundAddress,
       _gasLimit,
       _gasPriceBid,
       _messageBatch
     );
 
-    emit MessageBatchDispatched(_messageId, msg.sender, _toChainId, _messages);
-    emit MessageBatchProcessed(_messageId, msg.sender, ticketId);
+    emit MessageBatchDispatched(messageId, msg.sender, _toChainId, _messages);
+    emit MessageBatchProcessed(messageId, msg.sender, ticketId);
   }
 
   /**
