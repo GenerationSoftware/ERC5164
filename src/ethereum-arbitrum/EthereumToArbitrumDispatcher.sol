@@ -93,7 +93,7 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
   /**
    * @inheritdoc IMessageDispatcherArbitrum
    * @dev The transaction hash must match the one stored in the `dispatched` mapping.
-   * @dev `_from` is passed as `_callValueRefundAddress` cause this address can cancel the retryable ticket.
+   * @dev `_refundAddress` is passed as `_callValueRefundAddress`, this address can cancel the retryable ticket.
    * @dev We store `_message` in memory to avoid a stack too deep error.
    */
   function processMessage(
@@ -120,7 +120,7 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
       _executorAddress,
       _maxSubmissionCost,
       _refundAddress,
-      _from,
+      _refundAddress,
       _gasLimit,
       _gasPriceBid,
       _message
@@ -134,7 +134,7 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
   /**
    * @inheritdoc IMessageDispatcherArbitrum
    * @dev The transaction hash must match the one stored in the `dispatched` mapping.
-   * @dev `_from` is passed as `_callValueRefundAddress` cause this address can cancel the retryable ticket.
+   * @dev `_refundAddress` is passed as `_callValueRefundAddress`, this address can cancel the retryable ticket.
    * @dev We store `_messageBatch` in memory to avoid a stack too deep error.
    */
   function processMessageBatch(
@@ -165,7 +165,7 @@ contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
       _executorAddress,
       _maxSubmissionCost,
       _refundAddress,
-      _from,
+      _refundAddress,
       _gasLimit,
       _gasPriceBid,
       _messageBatch
