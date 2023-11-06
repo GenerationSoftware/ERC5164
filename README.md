@@ -267,21 +267,21 @@ function _msgSender() internal view returns (address payable _signer);
 
 ### Testnet
 
-#### Ethereum Goerli -> Arbitrum Goerli
+#### Ethereum Sepolia -> Arbitrum Sepolia
 
-| Network         | Contract                                                                                     | Address                                                                                                                      |
-| --------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Ethereum Goerli | [EthereumToArbitrumDispatcher.sol](./src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol) | [0xBc244773f71a2f897fAB5D5953AA052B8ff68670](https://goerli.etherscan.io/address/0xBc244773f71a2f897fAB5D5953AA052B8ff68670) |
-| Arbitrum Goerli | [EthereumToArbitrumExecutor](./src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol)         | [0xe7Ab52219631882f778120c1f19D6086ED390bE1](https://goerli.arbiscan.io/address/0xe7Ab52219631882f778120c1f19D6086ED390bE1)  |
-| Arbitrum Goerli | [Greeter](./test/contracts/Greeter.sol)                                                      | [0xA181dE5454daa63115e4A2f626E9268Cc812FcC1](https://goerli.arbiscan.io/address/0xA181dE5454daa63115e4A2f626E9268Cc812FcC1)  |
+| Network          | Contract                                                                                     | Address                                                                                                                       |
+| ---------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Ethereum Sepolia | [EthereumToArbitrumDispatcher.sol](./src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol) | [0x8bCDe547B30C6DE6b532073F2d091F8B292D60a6](https://sepolia.etherscan.io/address/0x8bCDe547B30C6DE6b532073F2d091F8B292D60a6) |
+| Arbitrum Sepolia | [EthereumToArbitrumExecutor](./src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol)         | [0x02aCC9594161812E3004C174CF1735EdB10e20A4](https://sepolia.arbiscan.io/address/0x02aCC9594161812E3004C174CF1735EdB10e20A4)  |
+| Arbitrum Sepolia | [Greeter](./test/contracts/Greeter.sol)                                                      | [0x49b86ba45C01957Df33Fe7bbB97002A0e4E5F964](https://sepolia.arbiscan.io/address/0x49b86ba45C01957Df33Fe7bbB97002A0e4E5F964)  |
 
-#### Ethereum Goerli -> Optimism Goerli
+#### Ethereum Sepolia -> Optimism Sepolia
 
-| Network         | Contract                                                                                     | Address                                                                                                                               |
-| --------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Ethereum Goerli | [EthereumToOptimismDispatcher.sol](./src/ethereum-optimism/EthereumToOptimismDispatcher.sol) | [0x177B14c6b571262057C3c30E3AE6bB044F62e55c](https://goerli.etherscan.io/address/0x177B14c6b571262057C3c30E3AE6bB044F62e55c)          |
-| Optimism Goerli | [EthereumToOptimismExecutor](./src/ethereum-optimism/EthereumToOptimismExecutor.sol)         | [0x59Ba766ff229c21b97184647292706039aF63dA1](https://goerli-optimism.etherscan.io/address/0x59Ba766ff229c21b97184647292706039aF63dA1) |
-| Optimism Goerli | [Greeter](./test/contracts/Greeter.sol)                                                      | [0x6D8c6c9408C7073b17Acb7bA1eBc541fb57c1aef](https://goerli-optimism.etherscan.io/address/0x6D8c6c9408C7073b17Acb7bA1eBc541fb57c1aef) |
+| Network          | Contract                                                                                     | Address                                                                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Ethereum Sepolia | [EthereumToOptimismDispatcher.sol](./src/ethereum-optimism/EthereumToOptimismDispatcher.sol) | [0x2aeB429f7d8c00983E033087Dd5a363AbA2AC55f](https://sepolia.etherscan.io/address/0x2aeB429f7d8c00983E033087Dd5a363AbA2AC55f)          |
+| Optimism Sepolia | [EthereumToOptimismExecutor](./src/ethereum-optimism/EthereumToOptimismExecutor.sol)         | [0x6A501383A61ebFBc143Fc4BD41A2356bA71A6964](https://sepolia-optimism.etherscan.io/address/0x6A501383A61ebFBc143Fc4BD41A2356bA71A6964) |
+| Optimism Sepolia | [Greeter](./test/contracts/Greeter.sol)                                                      | [0x8537C5a9AAd3ec1D31a84e94d19FcFC681E83ED0](https://sepolia-optimism.etherscan.io/address/0x8537C5a9AAd3ec1D31a84e94d19FcFC681E83ED0) |
 
 #### Ethereum Goerli -> Polygon Mumbai
 
@@ -382,16 +382,16 @@ yarn deploy:optimism
 
 #### Testnet
 
-##### Ethereum Goerli to Arbitrum Goerli bridge
+##### Ethereum Sepolia to Arbitrum Sepolia bridge
 
 ```
-yarn deploy:arbitrumGoerli
+yarn deploy:arbitrumSepolia
 ```
 
-##### Ethereum Goerli to Optimism Goerli bridge
+##### Ethereum Sepolia to Optimism Sepolia bridge
 
 ```
-yarn deploy:optimismGoerli
+yarn deploy:optimismSepolia
 ```
 
 ##### Ethereum Goerli to Polygon Mumbai bridge
@@ -406,13 +406,13 @@ You can use the following commands to bridge from Ethereum to a layer 2 of your 
 
 It will set the greeting message in the [Greeter](./test/contracts/Greeter.sol) contract to `Hello from L1` instead of `Hello from L2`.
 
-#### Ethereum Goerli to Arbitrum Goerli
+#### Ethereum Sepolia to Arbitrum Sepolia
 
 ```
-yarn bridge:arbitrumGoerli
+yarn bridge:arbitrumSepolia
 ```
 
-It takes about 15 minutes for the message to be bridged to Arbitrum Goerli.
+It takes about 15 minutes for the message to be bridged to Arbitrum Sepolia.
 
 ##### Example transaction
 
@@ -422,20 +422,20 @@ It takes about 15 minutes for the message to be bridged to Arbitrum Goerli.
 | Ethereum Goerli | processMessage  | [0x4effcda5e729a2943a86bd1317a784644123388bb4fd7ea207e70ec3a360ab60](https://goerli.etherscan.io/tx/0x4effcda5e729a2943a86bd1317a784644123388bb4fd7ea207e70ec3a360ab60) |
 | Arbitrum Goerli | executeMessage  | [0x0883252887d34a4a545a20e252e55c712807d1707438cf6e8503a99a32357024](https://goerli.arbiscan.io/tx/0x0883252887d34a4a545a20e252e55c712807d1707438cf6e8503a99a32357024)  |
 
-#### Ethereum Goerli to Optimism Goerli
+#### Ethereum Sepolia to Optimism Sepolia
 
 ```
-yarn bridge:optimismGoerli
+yarn bridge:optimismSepolia
 ```
 
-It takes about 5 minutes for the message to be bridged to Optimism Goerli.
+It takes about 5 minutes for the message to be bridged to Optimism Sepolia.
 
 ##### Example transaction
 
-| Network         | Message         | Transaction hash                                                                                                                                                                                                                                                 |
-| --------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ethereum Goerli | dispatchMessage | [0xdaf3b8210294dc2414beefa14e56f47f638510031c4487443c58fd6a92c8f386](https://goerli.etherscan.io/tx/0xdaf3b8210294dc2414beefa14e56f47f638510031c4487443c58fd6a92c8f386)                                                                                          |
-| Optimism Goerli | executeMessage  | [https://goerli-optimism.etherscan.io/tx/0xa83813646e7978cea4f27b57688ce30e3622b135ca6c18489d0c8fa3ee297c5b](https://goerli-optimism.etherscan.io/tx/https://goerli-optimism.etherscan.io/tx/0xa83813646e7978cea4f27b57688ce30e3622b135ca6c18489d0c8fa3ee297c5b) |
+| Network          | Message         | Transaction hash                                                                                                                                                                                                                                                    |
+| ---------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ethereum Sepolia | dispatchMessage | [0xbfef5bbbe67454c75545739cf69e03d0e947158295fe052d468c0000729f0019](https://sepolia.etherscan.io/tx/0xbfef5bbbe67454c75545739cf69e03d0e947158295fe052d468c0000729f0019)                                                                                            |
+| Optimism Sepolia | executeMessage  | [https://sepolia-optimism.etherscan.io/tx/0x5c68c4b7912771e075437a2d170789ba8d36084e1ccd89c4fd18e5544937a0b8](https://sepolia-optimism.etherscan.io/tx/https://sepolia-optimism.etherscan.io/tx/0x5c68c4b7912771e075437a2d170789ba8d36084e1ccd89c4fd18e5544937a0b8) |
 
 #### Ethereum Goerli to Polygon Mumbai
 
