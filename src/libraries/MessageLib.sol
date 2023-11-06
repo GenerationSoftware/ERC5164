@@ -148,7 +148,7 @@ library MessageLib {
     uint256 fromChainId,
     address from,
     bool executedMessageId
-  ) external {
+  ) internal {
     if (executedMessageId) {
       revert IMessageExecutor.MessageIdAlreadyExecuted(messageId);
     }

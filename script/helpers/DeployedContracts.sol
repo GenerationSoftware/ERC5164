@@ -1,26 +1,35 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { Script } from "forge-std/Script.sol";
 import { stdJson } from "forge-std/StdJson.sol";
 import "solidity-stringutils/strings.sol";
 
-import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
-import { MessageExecutorOptimism } from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
+import {
+  MessageDispatcherOptimism
+} from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
+import {
+  MessageExecutorOptimism
+} from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
 
-import { MessageDispatcherPolygon } from "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
+import {
+  MessageDispatcherPolygon
+} from "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
 import { MessageExecutorPolygon } from "../../src/ethereum-polygon/EthereumToPolygonExecutor.sol";
 
-import { MessageDispatcherArbitrum } from "../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
-import { MessageExecutorArbitrum } from "../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
+import {
+  MessageDispatcherArbitrum
+} from "../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
+import {
+  MessageExecutorArbitrum
+} from "../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
 
 import { Greeter } from "../../test/contracts/Greeter.sol";
 
 // Testnet deployment paths
-string constant OPTIMISM_GOERLI_PATH = "/broadcast/DeployToOptimismGoerli.s.sol/420/";
+string constant OPTIMISM_SEPOLIA_PATH = "/broadcast/DeployToOptimismSepolia.s.sol/11155420/";
 string constant MUMBAI_PATH = "/broadcast/DeployToMumbai.s.sol/80001/";
-string constant ARBITRUM_PATH = "/broadcast/DeployToArbitrumGoerli.s.sol/421613/";
+string constant ARBITRUM_SEPOLIA_PATH = "/broadcast/DeployToArbitrumSepolia.s.sol/421614/";
 
 abstract contract DeployedContracts is Script {
   using strings for *;
@@ -114,26 +123,26 @@ abstract contract DeployedContracts is Script {
   }
 
   /* ============ Testnet ============ */
-  function _getMessageDispatcherOptimismGoerli() internal returns (MessageDispatcherOptimism) {
+  function _getMessageDispatcherOptimismSepolia() internal returns (MessageDispatcherOptimism) {
     return
       MessageDispatcherOptimism(
         _getContractAddress(
           "MessageDispatcherOptimism",
-          "/broadcast/DeployToOptimismGoerli.s.sol/5/",
+          "/broadcast/DeployToOptimismSepolia.s.sol/11155111/",
           "dispatcher-not-found"
         )
       );
   }
 
-  function _getMessageExecutorOptimismGoerli() internal returns (MessageExecutorOptimism) {
+  function _getMessageExecutorOptimismSepolia() internal returns (MessageExecutorOptimism) {
     return
       MessageExecutorOptimism(
-        _getContractAddress("MessageExecutorOptimism", OPTIMISM_GOERLI_PATH, "executor-not-found")
+        _getContractAddress("MessageExecutorOptimism", OPTIMISM_SEPOLIA_PATH, "executor-not-found")
       );
   }
 
-  function _getGreeterOptimismGoerli() internal returns (Greeter) {
-    return Greeter(_getContractAddress("Greeter", OPTIMISM_GOERLI_PATH, "greeter-not-found"));
+  function _getGreeterOptimismSepolia() internal returns (Greeter) {
+    return Greeter(_getContractAddress("Greeter", OPTIMISM_SEPOLIA_PATH, "greeter-not-found"));
   }
 
   /* ============ Polygon ============ */
@@ -160,25 +169,26 @@ abstract contract DeployedContracts is Script {
   }
 
   /* ============ Arbitrum ============ */
-  function _getMessageDispatcherArbitrum() internal returns (MessageDispatcherArbitrum) {
+  /* ============ Testnet ============ */
+  function _getMessageDispatcherArbitrumSepolia() internal returns (MessageDispatcherArbitrum) {
     return
       MessageDispatcherArbitrum(
         _getContractAddress(
           "MessageDispatcherArbitrum",
-          "/broadcast/DeployToArbitrumGoerli.s.sol/5/",
+          "/broadcast/DeployToArbitrumSepolia.s.sol/11155111/",
           "dispatcher-not-found"
         )
       );
   }
 
-  function _getMessageExecutorArbitrum() internal returns (MessageExecutorArbitrum) {
+  function _getMessageExecutorArbitrumSepolia() internal returns (MessageExecutorArbitrum) {
     return
       MessageExecutorArbitrum(
-        _getContractAddress("MessageExecutorArbitrum", ARBITRUM_PATH, "executor-not-found")
+        _getContractAddress("MessageExecutorArbitrum", ARBITRUM_SEPOLIA_PATH, "executor-not-found")
       );
   }
 
-  function _getGreeterArbitrum() internal returns (Greeter) {
-    return Greeter(_getContractAddress("Greeter", ARBITRUM_PATH, "greeter-not-found"));
+  function _getGreeterArbitrumSepolia() internal returns (Greeter) {
+    return Greeter(_getContractAddress("Greeter", ARBITRUM_SEPOLIA_PATH, "greeter-not-found"));
   }
 }
