@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { Script } from "forge-std/Script.sol";
@@ -7,8 +6,12 @@ import { Script } from "forge-std/Script.sol";
 import { ICrossDomainMessenger } from "../../src/vendor/optimism/ICrossDomainMessenger.sol";
 import { DeployedContracts } from "../helpers/DeployedContracts.sol";
 
-import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
-import { MessageExecutorOptimism } from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
+import {
+  MessageDispatcherOptimism
+} from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
+import {
+  MessageExecutorOptimism
+} from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
 
 contract DeployMessageDispatcherToEthereumMainnet is Script {
   address public proxyOVML1CrossDomainMessenger = 0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1;

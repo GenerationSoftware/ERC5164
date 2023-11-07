@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { DeployedContracts } from "../helpers/DeployedContracts.sol";
 
 import { IMessageDispatcher } from "../../src/interfaces/IMessageDispatcher.sol";
-import { MessageDispatcherPolygon } from "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
+import {
+  MessageDispatcherPolygon
+} from "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
 import { MessageLib } from "../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../../test/contracts/Greeter.sol";

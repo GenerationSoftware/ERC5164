@@ -4,6 +4,7 @@
     {
       "files": "*.sol",
       "options": {
+        "compiler": "0.8.16",
         "bracketSpacing": true,
         "printWidth": 100,
         "tabWidth": 2
@@ -17,6 +18,6 @@
         "arrowParens": "always",
         "singleQuote": true
       }
-    },
+    }
   ]
 }
