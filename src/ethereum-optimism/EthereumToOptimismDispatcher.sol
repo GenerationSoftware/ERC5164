@@ -4,8 +4,12 @@ pragma solidity ^0.8.16;
 import { ICrossDomainMessenger } from "../vendor/optimism/ICrossDomainMessenger.sol";
 
 import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
-import { IMessageDispatcher, ISingleMessageDispatcher } from "../interfaces/ISingleMessageDispatcher.sol";
-import { IBatchedMessageDispatcher } from "../interfaces/IBatchedMessageDispatcher.sol";
+import {
+  IMessageDispatcher,
+  ISingleMessageDispatcher,
+  IBatchMessageDispatcher,
+  IMessageDispatcherOptimism
+} from "../interfaces/extensions/IMessageDispatcherOptimism.sol";
 
 import { MessageLib } from "../libraries/MessageLib.sol";
 
@@ -14,7 +18,7 @@ import { MessageLib } from "../libraries/MessageLib.sol";
  * @notice The MessageDispatcherOptimism contract allows a user or contract to send messages from Ethereum to Optimism.
  *         It lives on the Ethereum chain and communicates with the `MessageExecutorOptimism` contract on the Optimism chain.
  */
-contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageDispatcher {
+contract MessageDispatcherOptimism is IMessageDispatcherOptimism {
   /* ============ Variables ============ */
 
   /// @notice Address of the Optimism cross domain messenger on the Ethereum chain.
@@ -51,7 +55,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
 
   /* ============ External Functions ============ */
 
-  /// @inheritdoc ISingleMessageDispatcher
+  /// @inheritdoc IMessageDispatcher
   function dispatchMessage(
     uint256 _toChainId,
     address _to,
@@ -60,16 +64,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
     return _dispatchMessage(_toChainId, _to, _data, gasLimit);
   }
 
-  /**
-   * @notice Dispatch and process a message to the receiving chain.
-   * @dev Must compute and return an ID uniquely identifying the message.
-   * @dev Must emit the `MessageDispatched` event when successfully dispatched.
-   * @param _toChainId ID of the receiving chain
-   * @param _to Address on the receiving chain that will receive `data`
-   * @param _data Data dispatched to the receiving chain
-   * @param _gasLimit Gas limit at which the message will be executed on Optimism
-   * @return bytes32 ID uniquely identifying the message
-   */
+  /// @inheritdoc IMessageDispatcherOptimism
   function dispatchMessageWithGasLimit(
     uint256 _toChainId,
     address _to,
@@ -79,7 +74,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
     return _dispatchMessage(_toChainId, _to, _data, _gasLimit);
   }
 
-  /// @inheritdoc IBatchedMessageDispatcher
+  /// @inheritdoc IBatchMessageDispatcher
   function dispatchMessageBatch(
     uint256 _toChainId,
     MessageLib.Message[] calldata _messages
@@ -87,15 +82,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
     return _dispatchMessageBatch(_toChainId, _messages, gasLimit);
   }
 
-  /**
-   * @notice Dispatch and process `messages` to the receiving chain.
-   * @dev Must compute and return an ID uniquely identifying the `messages`.
-   * @dev Must emit the `MessageBatchDispatched` event when successfully dispatched.
-   * @param _toChainId ID of the receiving chain
-   * @param _messages Array of Message dispatched
-   * @param _gasLimit Gas limit at which the message will be executed on Optimism
-   * @return bytes32 ID uniquely identifying the `messages`
-   */
+  /// @inheritdoc IMessageDispatcherOptimism
   function dispatchMessageWithGasLimitBatch(
     uint256 _toChainId,
     MessageLib.Message[] calldata _messages,
@@ -104,7 +91,7 @@ contract MessageDispatcherOptimism is ISingleMessageDispatcher, IBatchedMessageD
     return _dispatchMessageBatch(_toChainId, _messages, _gasLimit);
   }
 
-  /// @inheritdoc IMessageDispatcher
+  /// @inheritdoc ISingleMessageDispatcher
   function getMessageExecutorAddress(uint256 _toChainId) external view returns (address) {
     return _getMessageExecutorAddress(_toChainId);
   }

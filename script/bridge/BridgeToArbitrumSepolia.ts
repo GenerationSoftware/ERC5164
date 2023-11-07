@@ -3,6 +3,7 @@ import {
   L1ToL2MessageGasEstimator,
 } from '@arbitrum/sdk/';
 import { getBaseFee } from '@arbitrum/sdk/dist/lib/utils/lib';
+import { Provider } from '@ethersproject/abstract-provider';
 import { BigNumber, providers } from 'ethers';
 import hre from 'hardhat';
 
@@ -93,7 +94,7 @@ const main = async () => {
   ]);
 
   const l1ToL2MessageGasEstimate = new L1ToL2MessageGasEstimator(l2Provider);
-  const baseFee = await getBaseFee(l1Provider);
+  const baseFee = await getBaseFee(l1Provider as unknown as Provider);
 
   /**
    * The estimateAll method gives us the following values for sending an L1->L2 message
@@ -112,7 +113,7 @@ const main = async () => {
         data: executeMessageData,
       },
       baseFee,
-      l1Provider,
+      l1Provider as unknown as Provider,
     );
 
   info(

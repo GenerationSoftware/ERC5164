@@ -12,16 +12,17 @@ import {
 import {
   MessageExecutorOptimism
 } from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
+import { Greeter } from "../../test/contracts/Greeter.sol";
 
-contract DeployMessageDispatcherToEthereumMainnet is Script {
-  address public proxyOVML1CrossDomainMessenger = 0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1;
+contract DeployMessageDispatcherToSepolia is Script {
+  address public proxyOVML1CrossDomainMessenger = 0x58Cc85b8D04EA49cC6DBd3CbFFd00B4B8D6cb3ef;
 
   function run() public {
     vm.startBroadcast();
 
     new MessageDispatcherOptimism(
       ICrossDomainMessenger(proxyOVML1CrossDomainMessenger),
-      10,
+      11155420,
       1_920_000
     );
 
@@ -29,7 +30,7 @@ contract DeployMessageDispatcherToEthereumMainnet is Script {
   }
 }
 
-contract DeployMessageExecutorToOptimism is Script {
+contract DeployMessageExecutorToOptimismSepolia is Script {
   address public l2CrossDomainMessenger = 0x4200000000000000000000000000000000000007;
 
   function run() public {
@@ -44,8 +45,8 @@ contract DeployMessageExecutorToOptimism is Script {
 /// @dev Needs to be run after deploying MessageDispatcher and MessageExecutor
 contract SetMessageExecutor is DeployedContracts {
   function setMessageExecutor() public {
-    MessageDispatcherOptimism _messageDispatcher = _getMessageDispatcherOptimism();
-    MessageExecutorOptimism _messageExecutor = _getMessageExecutorOptimism();
+    MessageDispatcherOptimism _messageDispatcher = _getMessageDispatcherOptimismSepolia();
+    MessageExecutorOptimism _messageExecutor = _getMessageExecutorOptimismSepolia();
 
     _messageDispatcher.setExecutor(_messageExecutor);
   }
@@ -62,8 +63,8 @@ contract SetMessageExecutor is DeployedContracts {
 /// @dev Needs to be run after deploying MessageDispatcher and MessageExecutor
 contract SetMessageDispatcher is DeployedContracts {
   function setMessageDispatcher() public {
-    MessageDispatcherOptimism _messageDispatcher = _getMessageDispatcherOptimism();
-    MessageExecutorOptimism _messageExecutor = _getMessageExecutorOptimism();
+    MessageDispatcherOptimism _messageDispatcher = _getMessageDispatcherOptimismSepolia();
+    MessageExecutorOptimism _messageExecutor = _getMessageExecutorOptimismSepolia();
 
     _messageExecutor.setDispatcher(_messageDispatcher);
   }
@@ -72,6 +73,21 @@ contract SetMessageDispatcher is DeployedContracts {
     vm.startBroadcast();
 
     setMessageDispatcher();
+
+    vm.stopBroadcast();
+  }
+}
+
+contract DeployGreeterToOptimismSepolia is DeployedContracts {
+  function deployGreeter() public {
+    MessageExecutorOptimism _messageExecutor = _getMessageExecutorOptimismSepolia();
+    new Greeter(address(_messageExecutor), "Hello from L2");
+  }
+
+  function run() public {
+    vm.startBroadcast();
+
+    deployGreeter();
 
     vm.stopBroadcast();
   }

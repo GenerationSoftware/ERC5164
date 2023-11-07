@@ -1,19 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { DeployedContracts } from "../helpers/DeployedContracts.sol";
-import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
+import {
+  MessageDispatcherOptimism
+} from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
 
 import { Greeter } from "../../test/contracts/Greeter.sol";
 
-contract BridgeToOptimismGoerli is DeployedContracts {
+contract BridgeToOptimismSepolia is DeployedContracts {
   function bridgeToOptimism() public {
-    MessageDispatcherOptimism _messageDispatcher = _getMessageDispatcherOptimismGoerli();
+    MessageDispatcherOptimism _messageDispatcher = _getMessageDispatcherOptimismSepolia();
 
     _messageDispatcher.dispatchMessage(
-      420,
-      address(_getGreeterOptimismGoerli()),
+      11155420,
+      address(_getGreeterOptimismSepolia()),
       abi.encodeCall(Greeter.setGreeting, ("Hello from L1"))
     );
   }

@@ -23,4 +23,6 @@ export const OPTIMISM_CHAIN_ID = 10;
 export const POLYGON_CHAIN_ID = 137;
 
 export const GOERLI_CHAIN_ID = 5;
+export const SEPOLIA_CHAIN_ID = 11155111;
 export const ARBITRUM_GOERLI_CHAIN_ID = 421613;
+export const ARBITRUM_SEPOLIA_CHAIN_ID = 421614;

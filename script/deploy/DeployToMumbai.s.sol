@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { Script } from "forge-std/Script.sol";
 import { DeployedContracts } from "../helpers/DeployedContracts.sol";
 
 import { MessageExecutorPolygon } from "../../src/ethereum-polygon/EthereumToPolygonExecutor.sol";
-import { MessageDispatcherPolygon } from "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
+import {
+  MessageDispatcherPolygon
+} from "../../src/ethereum-polygon/EthereumToPolygonDispatcher.sol";
 
 import { Greeter } from "../../test/contracts/Greeter.sol";
 

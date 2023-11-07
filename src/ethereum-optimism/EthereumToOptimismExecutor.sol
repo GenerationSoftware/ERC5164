@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { ICrossDomainMessenger } from "../vendor/optimism/ICrossDomainMessenger.sol";
 
 import { IMessageDispatcher } from "../interfaces/IMessageDispatcher.sol";
-import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
+import {
+  ISingleMessageExecutor,
+  IBatchMessageExecutor
+} from "../interfaces/extensions/IBatchMessageExecutor.sol";
 import { MessageLib } from "../libraries/MessageLib.sol";
 
 /**
@@ -13,7 +15,7 @@ import { MessageLib } from "../libraries/MessageLib.sol";
  * @notice The MessageExecutorOptimism contract executes messages from the Ethereum chain.
  *         These messages are sent by the `MessageDispatcherOptimism` contract which lives on the Ethereum chain.
  */
-contract MessageExecutorOptimism is IMessageExecutor {
+contract MessageExecutorOptimism is IBatchMessageExecutor {
   /* ============ Variables ============ */
 
   /// @notice Address of the Optimism cross domain messenger on the Optimism chain.
@@ -42,7 +44,7 @@ contract MessageExecutorOptimism is IMessageExecutor {
 
   /* ============ External Functions ============ */
 
-  /// @inheritdoc IMessageExecutor
+  /// @inheritdoc ISingleMessageExecutor
   function executeMessage(
     address _to,
     bytes calldata _data,
@@ -61,7 +63,7 @@ contract MessageExecutorOptimism is IMessageExecutor {
     emit MessageIdExecuted(_fromChainId, _messageId);
   }
 
-  /// @inheritdoc IMessageExecutor
+  /// @inheritdoc IBatchMessageExecutor
   function executeMessageBatch(
     MessageLib.Message[] calldata _messages,
     bytes32 _messageId,

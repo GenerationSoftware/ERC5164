@@ -1,13 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { Test } from "forge-std/Test.sol";
 
 import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 
-import { MessageDispatcherArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
-import { MessageExecutorArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
+import {
+  MessageDispatcherArbitrum
+} from "../../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
+import {
+  MessageExecutorArbitrum
+} from "../../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
 import { MessageLib } from "../../../src/libraries/MessageLib.sol";
 
 import { Greeter } from "../../contracts/Greeter.sol";
@@ -60,6 +63,23 @@ contract MessageDispatcherArbitrumUnitTest is Test {
   event MessageBatchProcessed(
     bytes32 indexed messageId,
     address indexed sender,
+    uint256 indexed ticketId
+  );
+
+  event MessageDispatchedAndProcessed(
+    bytes32 indexed messageId,
+    address indexed from,
+    uint256 toChainId,
+    address to,
+    bytes data,
+    uint256 indexed ticketId
+  );
+
+  event MessageBatchDispatchedAndProcessed(
+    bytes32 indexed messageId,
+    address indexed from,
+    uint256 toChainId,
+    MessageLib.Message[] messages,
     uint256 indexed ticketId
   );
 
@@ -202,6 +222,73 @@ contract MessageDispatcherArbitrumUnitTest is Test {
       gasPriceBid
     );
 
+    assertEq(_ticketId, _randomNumber);
+  }
+
+  /* ============ DispatchAndProcess  ============ */
+
+  function testDispatchAndProcessMessage() public {
+    setExecutor();
+
+    MessageLib.Message memory _message = messages[0];
+
+    bytes32 _expectedMessageId = MessageLib.computeMessageId(
+      nonce,
+      address(this),
+      _message.to,
+      _message.data
+    );
+
+    uint256 _randomNumber = inbox.generateRandomNumber();
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageDispatched(
+      _expectedMessageId,
+      address(this),
+      toChainId,
+      _message.to,
+      _message.data
+    );
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageProcessed(_expectedMessageId, address(this), _randomNumber);
+
+    (bytes32 _messageId, uint256 _ticketId) = dispatcher.dispatchAndProcessMessage(
+      toChainId,
+      _message.to,
+      _message.data,
+      msg.sender,
+      gasLimit,
+      maxSubmissionCost,
+      gasPriceBid
+    );
+
+    assertEq(_messageId, _expectedMessageId);
+    assertEq(_ticketId, _randomNumber);
+  }
+
+  function testDispatchAndProcessMessageBatch() public {
+    setExecutor();
+
+    bytes32 _expectedMessageId = MessageLib.computeMessageBatchId(nonce, address(this), messages);
+    uint256 _randomNumber = inbox.generateRandomNumber();
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageBatchDispatched(_expectedMessageId, address(this), toChainId, messages);
+
+    vm.expectEmit(true, true, true, true, address(dispatcher));
+    emit MessageBatchProcessed(_expectedMessageId, address(this), _randomNumber);
+
+    (bytes32 _messageId, uint256 _ticketId) = dispatcher.dispatchAndProcessMessageBatch(
+      toChainId,
+      messages,
+      msg.sender,
+      gasLimit,
+      maxSubmissionCost,
+      gasPriceBid
+    );
+
+    assertEq(_messageId, _expectedMessageId);
     assertEq(_ticketId, _randomNumber);
   }
 

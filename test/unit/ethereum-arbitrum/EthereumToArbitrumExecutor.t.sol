@@ -1,14 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
-
 import { Test } from "forge-std/Test.sol";
 
+import {
+  IMessageExecutor,
+  IBatchMessageExecutor
+} from "../../../src/interfaces/extensions/IBatchMessageExecutor.sol";
 import { AddressAliasHelper } from "../../../src/libraries/AddressAliasHelper.sol";
 import { MessageLib } from "../../../src/libraries/MessageLib.sol";
 
-import { MessageExecutorArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
-import { MessageDispatcherArbitrum } from "../../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
+import {
+  MessageExecutorArbitrum
+} from "../../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
+import {
+  MessageDispatcherArbitrum
+} from "../../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
 
 import { Greeter } from "../../contracts/Greeter.sol";
 
@@ -100,7 +106,7 @@ contract MessageExecutorArbitrumUnitTest is Test {
     executor.executeMessage(_message.to, _message.data, _messageId, fromChainId, from);
 
     vm.expectRevert(
-      abi.encodeWithSelector(MessageLib.MessageIdAlreadyExecuted.selector, _messageId)
+      abi.encodeWithSelector(IMessageExecutor.MessageIdAlreadyExecuted.selector, _messageId)
     );
 
     executor.executeMessage(_message.to, _message.data, _messageId, fromChainId, from);
@@ -121,7 +127,7 @@ contract MessageExecutorArbitrumUnitTest is Test {
     );
 
     vm.expectRevert(
-      abi.encodeWithSelector(MessageLib.MessageFailure.selector, _messageId, bytes(""))
+      abi.encodeWithSelector(IMessageExecutor.MessageFailure.selector, _messageId, bytes(""))
     );
 
     executor.executeMessage(_message.to, _message.data, _messageId, fromChainId, from);
@@ -191,7 +197,7 @@ contract MessageExecutorArbitrumUnitTest is Test {
     executor.executeMessageBatch(messages, _messageId, fromChainId, from);
 
     vm.expectRevert(
-      abi.encodeWithSelector(MessageLib.MessageIdAlreadyExecuted.selector, _messageId)
+      abi.encodeWithSelector(IMessageExecutor.MessageIdAlreadyExecuted.selector, _messageId)
     );
 
     executor.executeMessageBatch(messages, _messageId, fromChainId, from);
@@ -206,7 +212,12 @@ contract MessageExecutorArbitrumUnitTest is Test {
     bytes32 _messageId = MessageLib.computeMessageBatchId(nonce, msg.sender, messages);
 
     vm.expectRevert(
-      abi.encodeWithSelector(MessageLib.MessageBatchFailure.selector, _messageId, 0, bytes(""))
+      abi.encodeWithSelector(
+        IBatchMessageExecutor.MessageBatchFailure.selector,
+        _messageId,
+        0,
+        bytes("")
+      )
     );
 
     executor.executeMessageBatch(messages, _messageId, fromChainId, from);

@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 
-import { IMessageDispatcher } from "../interfaces/IMessageDispatcher.sol";
 import { IMessageExecutor } from "../interfaces/IMessageExecutor.sol";
-import { ISingleMessageDispatcher } from "../interfaces/ISingleMessageDispatcher.sol";
-import { IBatchedMessageDispatcher } from "../interfaces/IBatchedMessageDispatcher.sol";
+import {
+  IMessageDispatcher,
+  ISingleMessageDispatcher,
+  IBatchMessageDispatcher,
+  IMessageDispatcherArbitrum
+} from "../interfaces/extensions/IMessageDispatcherArbitrum.sol";
 
 import { MessageLib } from "../libraries/MessageLib.sol";
 
@@ -16,35 +18,7 @@ import { MessageLib } from "../libraries/MessageLib.sol";
  * @notice The MessageDispatcherArbitrum contract allows a user or contract to send messages from Ethereum to Arbitrum.
  *         It lives on the Ethereum chain and communicates with the `MessageExecutorArbitrum` contract on the Arbitrum chain.
  */
-contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageDispatcher {
-  /* ============ Events ============ */
-
-  /**
-   * @notice Emitted once a message has been processed and put in the Arbitrum inbox.
-   * @dev Using the `ticketId`, this message can be reexecuted for some fixed amount of time if it reverts.
-   * @param messageId ID uniquely identifying the messages
-   * @param sender Address who processed the messages
-   * @param ticketId Id of the newly created retryable ticket
-   */
-  event MessageProcessed(
-    bytes32 indexed messageId,
-    address indexed sender,
-    uint256 indexed ticketId
-  );
-
-  /**
-   * @notice Emitted once a message has been processed and put in the Arbitrum inbox.
-   * @dev Using the `ticketId`, this message can be reexecuted for some fixed amount of time if it reverts.
-   * @param messageId ID uniquely identifying the messages
-   * @param sender Address who processed the messages
-   * @param ticketId Id of the newly created retryable ticket
-   */
-  event MessageBatchProcessed(
-    bytes32 indexed messageId,
-    address indexed sender,
-    uint256 indexed ticketId
-  );
-
+contract MessageDispatcherArbitrum is IMessageDispatcherArbitrum {
   /* ============ Variables ============ */
 
   /// @notice Address of the Arbitrum inbox on the Ethereum chain.
@@ -83,7 +57,7 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
 
   /* ============ External Functions ============ */
 
-  /// @inheritdoc ISingleMessageDispatcher
+  /// @inheritdoc IMessageDispatcher
   function dispatchMessage(
     uint256 _toChainId,
     address _to,
@@ -91,8 +65,7 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
   ) external returns (bytes32) {
     _checkToChainId(_toChainId);
 
-    uint256 _nonce = _incrementNonce();
-    bytes32 _messageId = MessageLib.computeMessageId(_nonce, msg.sender, _to, _data);
+    bytes32 _messageId = _computeMessageId(msg.sender, _to, _data);
 
     dispatched[_getMessageTxHash(_messageId, msg.sender, _to, _data)] = true;
 
@@ -101,15 +74,14 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
     return _messageId;
   }
 
-  /// @inheritdoc IBatchedMessageDispatcher
+  /// @inheritdoc IBatchMessageDispatcher
   function dispatchMessageBatch(
     uint256 _toChainId,
     MessageLib.Message[] calldata _messages
   ) external returns (bytes32) {
     _checkToChainId(_toChainId);
 
-    uint256 _nonce = _incrementNonce();
-    bytes32 _messageId = MessageLib.computeMessageBatchId(_nonce, msg.sender, _messages);
+    bytes32 _messageId = _computeMessageBatchId(msg.sender, _messages);
 
     dispatched[_getMessageBatchTxHash(_messageId, msg.sender, _messages)] = true;
 
@@ -119,19 +91,10 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
   }
 
   /**
-   * @notice Process message that has been dispatched.
+   * @inheritdoc IMessageDispatcherArbitrum
    * @dev The transaction hash must match the one stored in the `dispatched` mapping.
-   * @dev `_from` is passed as `callValueRefundAddress` cause this address can cancel the retryably ticket.
+   * @dev `_refundAddress` is passed as `_callValueRefundAddress`, this address can cancel the retryable ticket.
    * @dev We store `_message` in memory to avoid a stack too deep error.
-   * @param _messageId ID of the message to process
-   * @param _from Address who dispatched the `_data`
-   * @param _to Address that will receive the message
-   * @param _data Data that was dispatched
-   * @param _refundAddress Address that will receive the `excessFeeRefund` amount if any
-   * @param _gasLimit Maximum amount of gas required for the `_messages` to be executed
-   * @param _maxSubmissionCost Max gas deducted from user's L2 balance to cover base submission fee
-   * @param _gasPriceBid Gas price bid for L2 execution
-   * @return uint256 Id of the retryable ticket that was created
    */
   function processMessage(
     bytes32 _messageId,
@@ -153,34 +116,26 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
 
     bytes memory _message = MessageLib.encodeMessage(_to, _data, _messageId, block.chainid, _from);
 
-    uint256 _ticketID = _createRetryableTicket(
+    uint256 _ticketId = _createRetryableTicket(
       _executorAddress,
       _maxSubmissionCost,
       _refundAddress,
-      _from,
+      _refundAddress,
       _gasLimit,
       _gasPriceBid,
       _message
     );
 
-    emit MessageProcessed(_messageId, msg.sender, _ticketID);
+    emit MessageProcessed(_messageId, msg.sender, _ticketId);
 
-    return _ticketID;
+    return _ticketId;
   }
 
   /**
-   * @notice Process messages that have been dispatched.
+   * @inheritdoc IMessageDispatcherArbitrum
    * @dev The transaction hash must match the one stored in the `dispatched` mapping.
-   * @dev `_from` is passed as `messageValueRefundAddress` cause this address can cancel the retryably ticket.
-   * @dev We store `_message` in memory to avoid a stack too deep error.
-   * @param _messageId ID of the messages to process
-   * @param _messages Array of messages being processed
-   * @param _from Address who dispatched the `_messages`
-   * @param _refundAddress Address that will receive the `excessFeeRefund` amount if any
-   * @param _gasLimit Maximum amount of gas required for the `_messages` to be executed
-   * @param _maxSubmissionCost Max gas deducted from user's L2 balance to cover base submission fee
-   * @param _gasPriceBid Gas price bid for L2 execution
-   * @return uint256 Id of the retryable ticket that was created
+   * @dev `_refundAddress` is passed as `_callValueRefundAddress`, this address can cancel the retryable ticket.
+   * @dev We store `_messageBatch` in memory to avoid a stack too deep error.
    */
   function processMessageBatch(
     bytes32 _messageId,
@@ -206,19 +161,99 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
       _from
     );
 
-    uint256 _ticketID = _createRetryableTicket(
+    uint256 _ticketId = _createRetryableTicket(
       _executorAddress,
       _maxSubmissionCost,
       _refundAddress,
-      _from,
+      _refundAddress,
       _gasLimit,
       _gasPriceBid,
       _messageBatch
     );
 
-    emit MessageBatchProcessed(_messageId, msg.sender, _ticketID);
+    emit MessageBatchProcessed(_messageId, msg.sender, _ticketId);
 
-    return _ticketID;
+    return _ticketId;
+  }
+
+  /**
+   * @inheritdoc IMessageDispatcherArbitrum
+   * @dev `_refundAddress` is passed as `_callValueRefundAddress`, this address can cancel the retryable ticket.
+   * @dev We store `_message` in memory to avoid a stack too deep error.
+   */
+  function dispatchAndProcessMessage(
+    uint256 _toChainId,
+    address _to,
+    bytes calldata _data,
+    address _refundAddress,
+    uint256 _gasLimit,
+    uint256 _maxSubmissionCost,
+    uint256 _gasPriceBid
+  ) external payable returns (bytes32 messageId, uint256 ticketId) {
+    address _executorAddress = address(executor);
+    _checkProcessParams(_executorAddress, _refundAddress);
+    _checkToChainId(_toChainId);
+
+    messageId = _computeMessageId(msg.sender, _to, _data);
+    bytes memory _message = MessageLib.encodeMessage(
+      _to,
+      _data,
+      messageId,
+      block.chainid,
+      msg.sender
+    );
+
+    ticketId = _createRetryableTicket(
+      _executorAddress,
+      _maxSubmissionCost,
+      _refundAddress,
+      _refundAddress,
+      _gasLimit,
+      _gasPriceBid,
+      _message
+    );
+
+    emit MessageDispatched(messageId, msg.sender, _toChainId, _to, _data);
+    emit MessageProcessed(messageId, msg.sender, ticketId);
+  }
+
+  /**
+   * @inheritdoc IMessageDispatcherArbitrum
+   * @dev `_refundAddress` is passed as `_callValueRefundAddress`, this address can cancel the retryable ticket.
+   * @dev We store `_messageBatch` in memory to avoid a stack too deep error.
+   */
+  function dispatchAndProcessMessageBatch(
+    uint256 _toChainId,
+    MessageLib.Message[] calldata _messages,
+    address _refundAddress,
+    uint256 _gasLimit,
+    uint256 _maxSubmissionCost,
+    uint256 _gasPriceBid
+  ) external payable returns (bytes32 messageId, uint256 ticketId) {
+    address _executorAddress = address(executor);
+    _checkProcessParams(_executorAddress, _refundAddress);
+    _checkToChainId(_toChainId);
+
+    messageId = _computeMessageBatchId(msg.sender, _messages);
+    bytes memory _messageBatch = MessageLib.encodeMessageBatch(
+      _messages,
+      messageId,
+      block.chainid,
+      msg.sender
+    );
+
+    ticketId = _createRetryableTicket(
+      _executorAddress,
+      _maxSubmissionCost,
+      _refundAddress,
+      _refundAddress,
+      _gasLimit,
+      _gasPriceBid,
+      _messageBatch
+    );
+
+    emit MessageBatchDispatched(messageId, msg.sender, _toChainId, _messages);
+    emit MessageBatchProcessed(messageId, msg.sender, ticketId);
   }
 
   /**
@@ -265,7 +300,7 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
     return _getMessageBatchTxHash(_messageId, _from, _messages);
   }
 
-  /// @inheritdoc IMessageDispatcher
+  /// @inheritdoc ISingleMessageDispatcher
   function getMessageExecutorAddress(uint256 _toChainId) external view returns (address) {
     _checkToChainId(_toChainId);
     return address(executor);
@@ -338,6 +373,32 @@ contract MessageDispatcherArbitrum is ISingleMessageDispatcher, IBatchedMessageD
     }
 
     return nonce;
+  }
+
+  /**
+   * @notice Compute message ID.
+   * @param _from Address that dispatched the message
+   * @param _to Address that will receive the message
+   * @param _data Data to dispatch
+   */
+  function _computeMessageId(
+    address _from,
+    address _to,
+    bytes calldata _data
+  ) internal returns (bytes32) {
+    return MessageLib.computeMessageId(_incrementNonce(), _from, _to, _data);
+  }
+
+  /**
+   * @notice Compute message batch ID.
+   * @param _from Address that dispatched the batch of messages
+   * @param _messages Array of Message to dispatch
+   */
+  function _computeMessageBatchId(
+    address _from,
+    MessageLib.Message[] memory _messages
+  ) internal returns (bytes32) {
+    return MessageLib.computeMessageBatchId(_incrementNonce(), _from, _messages);
   }
 
   /**

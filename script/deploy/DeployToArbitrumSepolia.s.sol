@@ -1,39 +1,35 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.16;
 
 import { Script } from "forge-std/Script.sol";
-
-import { ICrossDomainMessenger } from "../../src/vendor/optimism/ICrossDomainMessenger.sol";
+import { IInbox } from "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
 import { DeployedContracts } from "../helpers/DeployedContracts.sol";
 
-import { MessageDispatcherOptimism } from "../../src/ethereum-optimism/EthereumToOptimismDispatcher.sol";
-import { MessageExecutorOptimism } from "../../src/ethereum-optimism/EthereumToOptimismExecutor.sol";
+import {
+  MessageExecutorArbitrum
+} from "../../src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol";
+import {
+  MessageDispatcherArbitrum
+} from "../../src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol";
 import { Greeter } from "../../test/contracts/Greeter.sol";
 
-contract DeployMessageDispatcherToGoerli is Script {
-  address public proxyOVML1CrossDomainMessenger = 0x5086d1eEF304eb5284A0f6720f79403b4e9bE294;
+contract DeployMessageDispatcherToSepolia is Script {
+  address public delayedInbox = 0x6BEbC4925716945D46F0Ec336D5C2564F419682C;
 
   function run() public {
     vm.startBroadcast();
 
-    new MessageDispatcherOptimism(
-      ICrossDomainMessenger(proxyOVML1CrossDomainMessenger),
-      420,
-      1_920_000
-    );
+    new MessageDispatcherArbitrum(IInbox(delayedInbox), 421614);
 
     vm.stopBroadcast();
   }
 }
 
-contract DeployMessageExecutorToOptimismGoerli is Script {
-  address public l2CrossDomainMessenger = 0x4200000000000000000000000000000000000007;
-
+contract DeployMessageExecutorToArbitrumSepolia is Script {
   function run() public {
     vm.startBroadcast();
 
-    new MessageExecutorOptimism(ICrossDomainMessenger(l2CrossDomainMessenger));
+    new MessageExecutorArbitrum();
 
     vm.stopBroadcast();
   }
@@ -42,8 +38,8 @@ contract DeployMessageExecutorToOptimismGoerli is Script {
 /// @dev Needs to be run after deploying MessageDispatcher and MessageExecutor
 contract SetMessageExecutor is DeployedContracts {
   function setMessageExecutor() public {
-    MessageDispatcherOptimism _messageDispatcher = _getMessageDispatcherOptimismGoerli();
-    MessageExecutorOptimism _messageExecutor = _getMessageExecutorOptimismGoerli();
+    MessageDispatcherArbitrum _messageDispatcher = _getMessageDispatcherArbitrumSepolia();
+    MessageExecutorArbitrum _messageExecutor = _getMessageExecutorArbitrumSepolia();
 
     _messageDispatcher.setExecutor(_messageExecutor);
   }
@@ -60,8 +56,8 @@ contract SetMessageExecutor is DeployedContracts {
 /// @dev Needs to be run after deploying MessageDispatcher and MessageExecutor
 contract SetMessageDispatcher is DeployedContracts {
   function setMessageDispatcher() public {
-    MessageDispatcherOptimism _messageDispatcher = _getMessageDispatcherOptimismGoerli();
-    MessageExecutorOptimism _messageExecutor = _getMessageExecutorOptimismGoerli();
+    MessageDispatcherArbitrum _messageDispatcher = _getMessageDispatcherArbitrumSepolia();
+    MessageExecutorArbitrum _messageExecutor = _getMessageExecutorArbitrumSepolia();
 
     _messageExecutor.setDispatcher(_messageDispatcher);
   }
@@ -75,9 +71,9 @@ contract SetMessageDispatcher is DeployedContracts {
   }
 }
 
-contract DeployGreeterToOptimismGoerli is DeployedContracts {
+contract DeployGreeterToArbitrumSepolia is DeployedContracts {
   function deployGreeter() public {
-    MessageExecutorOptimism _messageExecutor = _getMessageExecutorOptimismGoerli();
+    MessageExecutorArbitrum _messageExecutor = _getMessageExecutorArbitrumSepolia();
     new Greeter(address(_messageExecutor), "Hello from L2");
   }
 
