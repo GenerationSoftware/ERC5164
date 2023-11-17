@@ -14,7 +14,7 @@ import {
 import { Greeter } from "../../test/contracts/Greeter.sol";
 
 contract DeployMessageDispatcherToSepolia is Script {
-  address public delayedInbox = 0x6BEbC4925716945D46F0Ec336D5C2564F419682C;
+  address public delayedInbox = 0xaAe29B0366299461418F5324a79Afc425BE5ae21;
 
   function run() public {
     vm.startBroadcast();

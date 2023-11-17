@@ -271,9 +271,9 @@ function _msgSender() internal view returns (address payable _signer);
 
 | Network          | Contract                                                                                     | Address                                                                                                                       |
 | ---------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Ethereum Sepolia | [EthereumToArbitrumDispatcher.sol](./src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol) | [0x8bCDe547B30C6DE6b532073F2d091F8B292D60a6](https://sepolia.etherscan.io/address/0x8bCDe547B30C6DE6b532073F2d091F8B292D60a6) |
-| Arbitrum Sepolia | [EthereumToArbitrumExecutor](./src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol)         | [0x02aCC9594161812E3004C174CF1735EdB10e20A4](https://sepolia.arbiscan.io/address/0x02aCC9594161812E3004C174CF1735EdB10e20A4)  |
-| Arbitrum Sepolia | [Greeter](./test/contracts/Greeter.sol)                                                      | [0x49b86ba45C01957Df33Fe7bbB97002A0e4E5F964](https://sepolia.arbiscan.io/address/0x49b86ba45C01957Df33Fe7bbB97002A0e4E5F964)  |
+| Ethereum Sepolia | [EthereumToArbitrumDispatcher.sol](./src/ethereum-arbitrum/EthereumToArbitrumDispatcher.sol) | [0x9887b04Fdf205Fef072d6F325c247264eD34ACF0](https://sepolia.etherscan.io/address/0x9887b04Fdf205Fef072d6F325c247264eD34ACF0) |
+| Arbitrum Sepolia | [EthereumToArbitrumExecutor](./src/ethereum-arbitrum/EthereumToArbitrumExecutor.sol)         | [0x2B3E6b5c9a6Bdb0e595896C9093fce013490abbD](https://sepolia.arbiscan.io/address/0x2B3E6b5c9a6Bdb0e595896C9093fce013490abbD)  |
+| Arbitrum Sepolia | [Greeter](./test/contracts/Greeter.sol)                                                      | [0xdA9C65A10a8EF5Ed3d3aAE9a63FD1Be99Cd88f0c](https://sepolia.arbiscan.io/address/0xdA9C65A10a8EF5Ed3d3aAE9a63FD1Be99Cd88f0c)  |
 
 #### Ethereum Sepolia -> Optimism Sepolia
 
